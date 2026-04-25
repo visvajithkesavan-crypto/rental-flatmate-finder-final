@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — My Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--amber-light:#FEF3DC;
+      --text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 2.5rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-logo-icon{width:36px;height:36px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .nav-logo-text{font-family:var(--serif);font-size:1.4rem;color:var(--navy);font-weight:700}
+    .nav-logo-text span{color:var(--green)}
+    .nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+    .nav-links a{padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;color:var(--text-muted);transition:all .18s}
+    .nav-links a:hover,.nav-links a.active{color:var(--navy);background:var(--bg)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.3rem;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+    .btn-ghost{background:transparent;color:var(--text-muted)}
+    .btn-ghost:hover{color:var(--navy)}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+    .btn-outline:hover{border-color:var(--navy);background:var(--navy-light)}
+    .btn-navy{background:var(--navy);color:white}
+    .btn-navy:hover{background:var(--navy-mid);transform:translateY(-1px)}
+    .btn-green{background:var(--green);color:white}
+    .btn-green:hover{background:var(--green-dark);transform:translateY(-1px)}
+
+    /* PAGE HEADER */
+    .page-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);padding:3rem 2.5rem;color:white}
+    .page-header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:2rem}
+    .header-avatar{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;flex-shrink:0;position:relative}
+    .avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;background:var(--green);border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer}
+    .header-info{flex:1}
+    .header-name{font-family:var(--serif);font-size:2rem;margin-bottom:.25rem}
+    .header-meta{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+    .header-meta-item{font-size:.85rem;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:4px}
+    .header-rep{display:flex;align-items:center;gap:.5rem;margin-top:.75rem}
+    .rep-bar-track{width:120px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}
+    .rep-bar-fill{height:100%;background:#6EE7B7;border-radius:3px;width:84%}
+    .rep-label{font-size:.8rem;color:rgba(255,255,255,.6)}
+    .completion-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:.3rem .9rem;border-radius:99px;font-size:.78rem;font-weight:500;margin-left:auto}
+
+    /* LAYOUT */
+    .page-body{max-width:1280px;margin:2rem auto;padding:0 2.5rem;display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start}
+
+    /* SECTION CARD */
+    .section-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;box-shadow:var(--shadow-sm);margin-bottom:1.5rem}
+    .section-card:last-child{margin-bottom:0}
+    .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .section-title{font-weight:700;font-size:1rem;color:var(--navy)}
+    .edit-toggle{font-size:.78rem;color:var(--green);font-weight:500;cursor:pointer}
+    .edit-toggle:hover{text-decoration:underline}
+
+    /* FORM ELEMENTS */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+    .form-group{margin-bottom:0}
+    .form-group.full{grid-column:1/-1}
+    .form-label{display:block;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+    .form-value{font-size:.95rem;color:var(--text);font-weight:500;padding:.55rem 0;border-bottom:1px solid transparent}
+    .form-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s;display:none}
+    .form-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,36,68,.06)}
+    .form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;background:white;cursor:pointer;display:none}
+    .form-textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;resize:vertical;min-height:90px;display:none}
+    .editing .form-value{display:none}
+    .editing .form-input,.editing .form-select,.editing .form-textarea{display:block}
+    .save-row{display:flex;gap:.75rem;margin-top:1.25rem;display:none}
+    .editing .save-row{display:flex}
+
+    /* PREFERENCE TAGS */
+    .pref-section{margin-bottom:1.25rem}
+    .pref-label{font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
+    .pref-options{display:flex;gap:.5rem;flex-wrap:wrap}
+    .pref-pill{padding:.35rem .9rem;border-radius:99px;font-size:.82rem;font-weight:500;cursor:pointer;border:1.5px solid var(--border);color:var(--text-muted);transition:all .18s;background:white}
+    .pref-pill.selected{border-color:var(--navy);color:var(--navy);background:var(--navy-light)}
+    .pref-pill:hover{border-color:var(--navy-mid)}
+
+    /* BUDGET RANGE */
+    .budget-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .budget-input{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .9rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;width:100%}
+    .budget-input:focus{border-color:var(--navy)}
+
+    /* STATS CARDS (right column) */
+    .stats-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);margin-bottom:1rem}
+    .stats-card h4{font-size:.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.1rem}
+    .stat-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)}
+    .stat-row:last-child{border-bottom:none}
+    .stat-row-label{font-size:.85rem;color:var(--text-muted);display:flex;align-items:center;gap:.5rem}
+    .stat-row-val{font-weight:700;font-size:.9rem;color:var(--navy)}
+
+    /* REVIEWS */
+    .review-card{padding:1rem 0;border-bottom:1px solid var(--border)}
+    .review-card:last-child{border-bottom:none;padding-bottom:0}
+    .review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+    .reviewer{display:flex;align-items:center;gap:.6rem}
+    .reviewer-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden}
+    .reviewer-avatar img{width:100%;height:100%;object-fit:cover}
+    .reviewer-name{font-weight:600;font-size:.875rem;color:var(--navy)}
+    .reviewer-date{font-size:.72rem;color:var(--text-light)}
+    .review-stars{color:var(--amber);font-size:.85rem}
+    .review-text{font-size:.85rem;color:var(--text-muted);line-height:1.65;font-style:italic}
+
+    /* COMPLETION LIST */
+    .completion-list{display:flex;flex-direction:column;gap:.5rem}
+    .completion-item{display:flex;align-items:center;gap:.6rem;font-size:.85rem}
+    .ci-done{color:var(--green)}
+    .ci-todo{color:var(--text-light)}
+    .ci-link{font-size:.75rem;color:var(--green);margin-left:auto;cursor:pointer}
+    .ci-link:hover{text-decoration:underline}
+
+    /* DANGER ZONE */
+    .danger-card{background:white;border:1px solid #FCA5A5;border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm)}
+    .danger-title{font-size:.82rem;font-weight:700;color:#EF4444;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem}
+    .danger-text{font-size:.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.6}
+    .danger-btn{padding:.55rem 1.1rem;background:transparent;border:1.5px solid #EF4444;color:#EF4444;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+    .danger-btn:hover{background:#EF4444;color:white}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:var(--navy);color:white;padding:.9rem 1.5rem;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);font-size:.875rem;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999;display:flex;align-items:center;gap:.6rem}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* FOOTER */
+    .footer{background:var(--navy);padding:2.5rem 2.5rem 2rem;margin-top:4rem}
+    .footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .footer-logo{font-family:var(--serif);font-size:1.3rem;color:white;font-weight:700}
+    .footer-logo span{color:#6EE7B7}
+    .footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🏠</div>
+      <div class="nav-logo-text">Rent<span>Mate</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="properties.html">Properties</a></li>
+      <li><a href="flatmates.html">Find Flatmate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="dashboard.html" class="btn btn-ghost">← Dashboard</a>
+      <a href="auth.html" class="btn btn-green">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="header-avatar">
+      PM
+      <div class="avatar-edit" onclick="showToast('Photo upload coming in live version!')">✏️</div>
+    </div>
+    <div class="header-info">
+      <div class="header-name">Priya Menon</div>
+      <div class="header-meta">
+        <div class="header-meta-item">👤 Tenant</div>
+        <div class="header-meta-item">📍 Chennai</div>
+        <div class="header-meta-item">🎓 Working Professional</div>
+        <div class="header-meta-item">📅 Member since Jan 2025</div>
+      </div>
+      <div class="header-rep">
+        <div class="rep-bar-track"><div class="rep-bar-fill"></div></div>
+        <div class="rep-label">⭐ Reputation: <strong>4.2</strong> / 5.0</div>
+      </div>
+    </div>
+    <div class="completion-badge">Profile 65% complete</div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="page-body">
+
+  <!-- LEFT COLUMN -->
+  <div>
+
+    <!-- PERSONAL INFO -->
+    <div class="section-card" id="card-personal">
+      <div class="section-hdr">
+        <div class="section-title">Personal Information</div>
+        <span class="edit-toggle" onclick="toggleEdit('personal')">✏️ Edit</span>
+      </div>
+      <div class="form-grid" id="form-personal">
+        <div class="form-group">
+          <div class="form-label">Full Name</div>
+          <div class="form-value">Priya Menon</div>
+          <input class="form-input" type="text" value="Priya Menon" />
+        </div>
+        <div class="form-group">
+          <div class="form-label">Email Address</div>
+          <div class="form-value">priya@gmail.com</div>
+          <input class="form-input" type="email" value="priya@gmail.com" />
+        </div>
+        <div class="form-group">
+          <div class="form-label">Phone Number</div>
+          <div class="form-value">9876543211</div>
+          <input class="form-input" type="tel" value="9876543211" />
+        </div>
+        <div class="form-group">
+          <div class="form-label">Role</div>
+          <div class="form-value">Tenant</div>
+          <select class="form-select">
+            <option selected>tenant</option>
+            <option>landlord</option>
+            <option>both</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <div class="form-label">College / Company</div>
+          <div class="form-value">Infosys, Chennai</div>
+          <input class="form-input" type="text" value="Infosys, Chennai" />
+        </div>
+        <div class="form-group full">
+          <div class="form-label">Bio</div>
+          <div class="form-value" style="color:var(--text-muted);font-style:italic">No bio added yet.</div>
+          <textarea class="form-textarea" placeholder="Tell potential flatmates a bit about yourself..."></textarea>
+        </div>
+        <div class="save-row">
+          <button class="btn btn-navy" onclick="saveSection('personal')">Save Changes</button>
+          <button class="btn btn-outline" onclick="toggleEdit('personal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLATMATE PREFERENCES -->
+    <div class="section-card" id="card-flatmate">
+      <div class="section-hdr">
+        <div class="section-title">Flatmate Preferences</div>
+        <span class="edit-toggle" onclick="toggleEdit('flatmate')">✏️ Edit</span>
+      </div>
+      <!-- These preferences map directly to FLATMATE_PROFILE table -->
+
+      <div class="pref-section">
+        <div class="pref-label">Sleep Schedule</div>
+        <div class="pref-options">
+          <div class="pref-pill selected" onclick="selectPref(this)">🌅 Early Bird</div>
+          <div class="pref-pill" onclick="selectPref(this)">🌙 Night Owl</div>
+          <div class="pref-pill" onclick="selectPref(this)">🔄 Flexible</div>
+        </div>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-label">Diet Preference</div>
+        <div class="pref-options">
+          <div class="pref-pill selected" onclick="selectPref(this)">🥗 Vegetarian</div>
+          <div class="pref-pill" onclick="selectPref(this)">🍖 Non-Vegetarian</div>
+          <div class="pref-pill" onclick="selectPref(this)">🌱 Vegan</div>
+          <div class="pref-pill" onclick="selectPref(this)">🍽️ No Preference</div>
+        </div>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-label">Study / Work Hours</div>
+        <div class="pref-options">
+          <div class="pref-pill selected" onclick="selectPref(this)">🌄 Morning</div>
+          <div class="pref-pill" onclick="selectPref(this)">🌆 Evening</div>
+          <div class="pref-pill" onclick="selectPref(this)">🌃 Night</div>
+        </div>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-label">Budget Range (per month)</div>
+        <div class="budget-row">
+          <div>
+            <div class="form-label" style="margin-bottom:.35rem">Minimum</div>
+            <input type="number" class="budget-input" value="7000" placeholder="₹ Min" />
+          </div>
+          <div>
+            <div class="form-label" style="margin-bottom:.35rem">Maximum</div>
+            <input type="number" class="budget-input" value="12000" placeholder="₹ Max" />
+          </div>
+        </div>
+      </div>
+
+      <div class="pref-section" style="margin-bottom:0">
+        <div class="pref-label">Preferred City / Area</div>
+        <div class="pref-options">
+          <div class="pref-pill selected" onclick="selectPref(this)">📍 Chennai</div>
+          <div class="pref-pill" onclick="selectPref(this)">📍 Bangalore</div>
+          <div class="pref-pill" onclick="selectPref(this)">📍 Open to both</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.25rem">
+        <button class="btn btn-navy" onclick="savePreferences()">Save Preferences</button>
+      </div>
+    </div>
+
+    <!-- REVIEWS RECEIVED -->
+    <div class="section-card">
+      <div class="section-hdr">
+        <div class="section-title">Reviews Received</div>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <span style="font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--navy)">4.2</span>
+          <span style="color:var(--amber)">★★★★☆</span>
+          <span style="font-size:.75rem;color:var(--text-muted)">(1 review)</span>
+        </div>
+      </div>
+      <!-- Reviews from REVIEW table in your database -->
+      <div class="review-card">
+        <div class="review-top">
+          <div class="reviewer">
+            <div class="reviewer-avatar">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80" alt="Arjun" />
+            </div>
+            <div>
+              <div class="reviewer-name">Arjun Sharma</div>
+              <div class="reviewer-date">January 2025 · Landlord</div>
+            </div>
+          </div>
+          <div class="review-stars">★★★★☆</div>
+        </div>
+        <p class="review-text">"Priya was a great tenant. Paid rent on time and kept the apartment clean. Would recommend to any landlord."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div>
+
+    <!-- ACCOUNT STATS -->
+    <div class="stats-card">
+      <h4>Account Overview</h4>
+      <!-- These values come from USER, BOOKING, LEASE, FLATMATE_MATCH tables -->
+      <div class="stat-row">
+        <div class="stat-row-label">📋 Bookings Made</div>
+        <div class="stat-row-val">3</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-row-label">📄 Active Leases</div>
+        <div class="stat-row-val">1</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-row-label">🤝 Flatmate Matches</div>
+        <div class="stat-row-val">6</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-row-label">⭐ Reputation Score</div>
+        <div class="stat-row-val">4.2 / 5</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-row-label">📅 Member Since</div>
+        <div class="stat-row-val">Jan 2025</div>
+      </div>
+    </div>
+
+    <!-- PROFILE COMPLETION -->
+    <div class="stats-card">
+      <h4>Profile Completion</h4>
+      <div style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.4rem">
+          <span style="color:var(--text-muted)">Completion</span>
+          <span style="font-weight:700;color:var(--navy)">65%</span>
+        </div>
+        <div style="height:7px;background:var(--border);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:65%;background:linear-gradient(90deg,var(--green),#3B82F6);border-radius:4px"></div>
+        </div>
+      </div>
+      <div class="completion-list">
+        <div class="completion-item ci-done">✅ Basic info added</div>
+        <div class="completion-item ci-done">✅ Email verified</div>
+        <div class="completion-item ci-done">✅ Flatmate profile set</div>
+        <div class="completion-item ci-todo">
+          ○ Add profile photo
+          <span class="ci-link" onclick="showToast('Photo upload in live version!')">Add →</span>
+        </div>
+        <div class="completion-item ci-todo">
+          ○ Write a bio
+          <span class="ci-link" onclick="toggleEdit('personal')">Add →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="stats-card">
+      <h4>Quick Links</h4>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <a href="dashboard.html" class="btn btn-outline" style="justify-content:center">📊 My Dashboard</a>
+        <a href="properties.html" class="btn btn-outline" style="justify-content:center">🏠 Browse Properties</a>
+        <a href="flatmates.html" class="btn btn-outline" style="justify-content:center">🤝 Find Flatmates</a>
+      </div>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="danger-card">
+      <div class="danger-title">⚠️ Danger Zone</div>
+      <div class="danger-text">Deleting your account will permanently remove all your data including bookings, leases, matches and reviews. This cannot be undone.</div>
+      <button class="danger-btn" onclick="confirmDelete()">Delete Account</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ <span id="toast-msg">Saved!</span></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">🏠 Rent<span>Mate</span></div>
+    <div class="footer-copy">© 2025 RentMate · DBMS Assignment</div>
+  </div>
+</footer>
+
+<script>
+  // Toggle edit mode for a section
+  function toggleEdit(section) {
+    const form = document.getElementById(`form-${section}`);
+    form.classList.toggle('editing');
+    const toggle = document.querySelector(`#card-${section} .edit-toggle`);
+    toggle.textContent = form.classList.contains('editing') ? '✕ Cancel' : '✏️ Edit';
+  }
+
+  // Save section changes
+  function saveSection(section) {
+    const form = document.getElementById(`form-${section}`);
+    // Update display values from inputs
+    form.querySelectorAll('.form-group').forEach(group => {
+      const val   = group.querySelector('.form-value');
+      const input = group.querySelector('.form-input, .form-select, .form-textarea');
+      if (val && input && input.value.trim()) {
+        val.textContent = input.value.trim();
+        val.style.fontStyle = 'normal';
+        val.style.color = 'var(--text)';
+      }
+    });
+    form.classList.remove('editing');
+    const toggle = document.querySelector(`#card-${section} .edit-toggle`);
+    toggle.textContent = '✏️ Edit';
+    // In real app: PUT /api/users/<id> → UPDATE USER SET ... in MySQL
+    showToast('Profile updated successfully!');
+  }
+
+  // Select a preference pill (single select within group)
+  function selectPref(el) {
+    const group = el.parentElement;
+    group.querySelectorAll('.pref-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // Save flatmate preferences
+  function savePreferences() {
+    // In real app: PUT /api/flatmates/profile → UPDATE FLATMATE_PROFILE SET ...
+    showToast('Flatmate preferences saved!');
+  }
+
+  // Toast notification
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // Delete account confirmation
+  function confirmDelete() {
+    if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+      // In real app: DELETE /api/users/<id> → DELETE FROM USER WHERE user_id = ?
+      // Cascade deletes will remove bookings, leases, matches, notifications
+      alert('Account deleted. Redirecting to home page.');
+      window.location.href = 'index.html';
+    }
+  }
+</script>
+</body>
+</html>

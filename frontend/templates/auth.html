@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — Login / Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+
+    /* LEFT PANEL */
+    .left-panel{background:linear-gradient(160deg,#0A1628 0%,#0F2444 50%,#162E52 100%);display:flex;flex-direction:column;justify-content:space-between;padding:3rem;position:relative;overflow:hidden}
+    .left-bg-grid{position:absolute;inset:0;opacity:.06;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:50px 50px}
+    .left-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(0,168,107,.18) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
+    .left-content{position:relative;z-index:1}
+    .left-logo{display:flex;align-items:center;gap:10px;margin-bottom:3rem}
+    .left-logo-icon{width:40px;height:40px;background:var(--green);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+    .left-logo-text{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:700}
+    .left-logo-text span{color:#6EE7B7}
+    .left-headline{font-family:var(--serif);font-size:2.4rem;color:white;line-height:1.2;margin-bottom:1rem}
+    .left-headline em{font-style:italic;color:#6EE7B7}
+    .left-sub{font-size:.95rem;color:rgba(255,255,255,.6);line-height:1.75;max-width:360px;margin-bottom:2.5rem}
+
+    /* Feature list */
+    .feature-list{display:flex;flex-direction:column;gap:.9rem}
+    .feature-item{display:flex;align-items:center;gap:.75rem}
+    .feature-icon{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .feature-text{font-size:.875rem;color:rgba(255,255,255,.75)}
+    .feature-text strong{color:white}
+
+    /* Testimonial */
+    .left-testimonial{position:relative;z-index:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:1.25rem}
+    .t-quote{font-size:.875rem;color:rgba(255,255,255,.7);font-style:italic;line-height:1.7;margin-bottom:.75rem}
+    .t-user{display:flex;align-items:center;gap:.6rem}
+    .t-avatar{width:32px;height:32px;border-radius:50%;overflow:hidden}
+    .t-avatar img{width:100%;height:100%;object-fit:cover}
+    .t-name{font-size:.8rem;font-weight:600;color:white}
+    .t-role{font-size:.72rem;color:rgba(255,255,255,.45)}
+
+    /* RIGHT PANEL */
+    .right-panel{display:flex;align-items:center;justify-content:center;padding:3rem 2rem;background:var(--bg)}
+    .auth-box{width:100%;max-width:420px}
+    .auth-tabs{display:flex;background:white;border:1px solid var(--border);border-radius:var(--radius-md);padding:.3rem;margin-bottom:2rem;box-shadow:var(--shadow-sm)}
+    .auth-tab{flex:1;padding:.6rem;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:all .2s}
+    .auth-tab.active{background:var(--navy);color:white;box-shadow:var(--shadow-sm)}
+
+    /* Form */
+    .auth-form{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-md)}
+    .form-title{font-family:var(--serif);font-size:1.6rem;color:var(--navy);margin-bottom:.4rem}
+    .form-subtitle{font-size:.875rem;color:var(--text-muted);margin-bottom:1.75rem}
+    .form-group{margin-bottom:1.1rem}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .form-label{display:block;font-size:.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+    .form-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.7rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s;background:white}
+    .form-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,36,68,.08)}
+    .form-input.error{border-color:#EF4444}
+    .form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.7rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;background:white;cursor:pointer;transition:border-color .2s}
+    .form-select:focus{border-color:var(--navy)}
+    .error-msg{font-size:.75rem;color:#EF4444;margin-top:.3rem;display:none}
+    .error-msg.show{display:block}
+
+    /* Password strength */
+    .pw-strength{margin-top:.4rem}
+    .pw-bar-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:4px}
+    .pw-bar-fill{height:100%;border-radius:2px;transition:width .3s,background .3s;width:0%}
+    .pw-label{font-size:.72rem;color:var(--text-muted)}
+
+    /* Role toggle */
+    .role-options{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+    .role-option{position:relative}
+    .role-option input{position:absolute;opacity:0;width:0;height:0}
+    .role-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.6rem .4rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-align:center}
+    .role-label:hover{border-color:var(--navy-mid);background:var(--navy-light)}
+    .role-option input:checked + .role-label{border-color:var(--navy);background:var(--navy-light)}
+    .role-icon{font-size:1.25rem}
+    .role-text{font-size:.72rem;font-weight:600;color:var(--text-muted)}
+    .role-option input:checked + .role-label .role-text{color:var(--navy)}
+
+    /* Submit */
+    .submit-btn{width:100%;padding:.9rem;background:var(--navy);color:white;border:none;border-radius:var(--radius-md);font-family:var(--sans);font-weight:700;font-size:1rem;cursor:pointer;transition:all .2s;margin-top:.5rem}
+    .submit-btn:hover{background:var(--navy-mid);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+    .submit-btn.loading{opacity:.7;pointer-events:none}
+
+    .divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0}
+    .divider-line{flex:1;height:1px;background:var(--border)}
+    .divider-text{font-size:.78rem;color:var(--text-light)}
+
+    .social-btn{width:100%;padding:.7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:.875rem;font-weight:600;cursor:pointer;background:white;color:var(--text);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .social-btn:hover{border-color:var(--navy);background:var(--navy-light)}
+
+    .form-footer{text-align:center;margin-top:1.25rem;font-size:.85rem;color:var(--text-muted)}
+    .form-footer a{color:var(--navy);font-weight:600}
+
+    /* Terms */
+    .terms-row{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:1rem}
+    .terms-check{margin-top:2px;accent-color:var(--navy);cursor:pointer;flex-shrink:0}
+    .terms-text{font-size:.78rem;color:var(--text-muted);line-height:1.5}
+    .terms-text a{color:var(--navy)}
+
+    /* Success state */
+    .success-screen{display:none;text-align:center;padding:1rem 0}
+    .success-screen.show{display:block}
+    .success-icon{font-size:4rem;margin-bottom:1rem;animation:bounce .6s ease}
+    @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+    .success-title{font-family:var(--serif);font-size:1.5rem;color:var(--navy);margin-bottom:.5rem}
+    .success-sub{font-size:.9rem;color:var(--text-muted);margin-bottom:1.5rem}
+  </style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="left-bg-grid"></div>
+  <div class="left-glow"></div>
+  <div class="left-content">
+    <div class="left-logo">
+      <div class="left-logo-icon">🏠</div>
+      <div class="left-logo-text">Rent<span>Mate</span></div>
+    </div>
+    <h2 class="left-headline">Your home and<br/><em>flatmate</em>, sorted.</h2>
+    <p class="left-sub">Join thousands of students and working professionals finding the perfect rental and compatible flatmates across Chennai and Bangalore.</p>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-text"><strong>Smart matching</strong> — compatibility scores out of 100 based on lifestyle</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏠</div>
+        <div class="feature-text"><strong>Real listings</strong> — verified properties with photos and landlord ratings</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔔</div>
+        <div class="feature-text"><strong>Instant notifications</strong> — database triggers alert you the moment something happens</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⭐</div>
+        <div class="feature-text"><strong>Reputation system</strong> — build trust through verified reviews after each lease</div>
+      </div>
+    </div>
+  </div>
+  <div class="left-testimonial">
+    <div class="t-quote">"Found my flatmate Sneha through RentMate. The compatibility score was spot on — we've been living together for 3 months and it's been amazing!"</div>
+    <div class="t-user">
+      <div class="t-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="Priya" /></div>
+      <div><div class="t-name">Priya Menon</div><div class="t-role">Tenant · Chennai</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="auth-box">
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+      <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="auth-form">
+        <div class="form-title">Welcome back</div>
+        <div class="form-subtitle">Login to your RentMate account</div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com" />
+          <div class="error-msg" id="loginEmailErr">Please enter a valid email.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" />
+          <div class="error-msg" id="loginPassErr">Password is required.</div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem">
+          <a href="#" style="font-size:.82rem;color:var(--navy);font-weight:500">Forgot password?</a>
+        </div>
+
+        <button class="submit-btn" onclick="handleLogin()">Login →</button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-text">or continue with</div>
+          <div class="divider-line"></div>
+        </div>
+
+        <button class="social-btn" onclick="alert('Google OAuth coming in the live version!')">
+          🌐 Continue with Google
+        </button>
+
+        <div class="form-footer">
+          Don't have an account? <a href="#" onclick="switchTab('register')">Create one</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" style="display:none">
+      <div class="auth-form">
+        <div class="form-title">Create account</div>
+        <div class="form-subtitle">Join RentMate — it's free</div>
+
+        <div class="success-screen" id="successScreen">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">Account Created!</div>
+          <div class="success-sub">Welcome to RentMate. Redirecting you to your dashboard...</div>
+          <a href="dashboard.html" class="submit-btn" style="display:inline-block;text-decoration:none;padding:.9rem 2rem;border-radius:var(--radius-md)">Go to Dashboard →</a>
+        </div>
+
+        <div id="registerFields">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-input" id="regFirstName" placeholder="Arjun" />
+              <div class="error-msg" id="regFirstErr">Required.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-input" id="regLastName" placeholder="Sharma" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" id="regEmail" placeholder="you@example.com" />
+            <div class="error-msg" id="regEmailErr">Enter a valid email.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input" id="regPhone" placeholder="98765 43210" maxlength="10" />
+            <div class="error-msg" id="regPhoneErr">Enter a valid 10-digit number.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">College / Company</label>
+            <input type="text" class="form-input" id="regCollege" placeholder="IIT Madras / Infosys" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">I am a</label>
+            <div class="role-options">
+              <div class="role-option">
+                <input type="radio" name="role" id="roleTenant" value="tenant" checked />
+                <label class="role-label" for="roleTenant">
+                  <span class="role-icon">🔍</span>
+                  <span class="role-text">Tenant</span>
+                </label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="roleLandlord" value="landlord" />
+                <label class="role-label" for="roleLandlord">
+                  <span class="role-icon">🏠</span>
+                  <span class="role-text">Landlord</span>
+                </label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="roleBoth" value="both" />
+                <label class="role-label" for="roleBoth">
+                  <span class="role-icon">🔄</span>
+                  <span class="role-text">Both</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="regPassword" placeholder="Min 8 characters" oninput="checkStrength(this.value)" />
+            <div class="pw-strength">
+              <div class="pw-bar-track"><div class="pw-bar-fill" id="pwBar"></div></div>
+              <div class="pw-label" id="pwLabel">Enter a password</div>
+            </div>
+            <div class="error-msg" id="regPassErr">Password must be at least 8 characters.</div>
+          </div>
+
+          <div class="terms-row">
+            <input type="checkbox" class="terms-check" id="termsCheck" />
+            <div class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. My data will be stored securely in the RentMate database.</div>
+          </div>
+
+          <button class="submit-btn" onclick="handleRegister()">Create Account →</button>
+
+          <div class="form-footer">
+            Already have an account? <a href="#" onclick="switchTab('login')">Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Switch between login and register
+  function switchTab(tab) {
+    const tabs = document.querySelectorAll('.auth-tab');
+    tabs[0].classList.toggle('active', tab === 'login');
+    tabs[1].classList.toggle('active', tab === 'register');
+    document.getElementById('loginForm').style.display    = tab === 'login'    ? '' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+  }
+
+  // Login handler
+  function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPassword').value;
+    let valid   = true;
+
+    // Simple validation
+    if (!email || !email.includes('@')) {
+      document.getElementById('loginEmailErr').classList.add('show');
+      document.getElementById('loginEmail').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('loginEmailErr').classList.remove('show');
+      document.getElementById('loginEmail').classList.remove('error');
+    }
+
+    if (!pass) {
+      document.getElementById('loginPassErr').classList.add('show');
+      document.getElementById('loginPassword').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('loginPassErr').classList.remove('show');
+      document.getElementById('loginPassword').classList.remove('error');
+    }
+
+    if (!valid) return;
+
+    // In real app: POST /login → Flask checks USER table in MySQL
+    const btn = document.querySelector('#loginForm .submit-btn');
+    btn.textContent = 'Logging in...';
+    btn.classList.add('loading');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+  }
+
+  // Register handler
+  function handleRegister() {
+    const first = document.getElementById('regFirstName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const pass  = document.getElementById('regPassword').value;
+    const terms = document.getElementById('termsCheck').checked;
+    let valid   = true;
+
+    if (!first) {
+      document.getElementById('regFirstErr').classList.add('show');
+      document.getElementById('regFirstName').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('regFirstErr').classList.remove('show');
+      document.getElementById('regFirstName').classList.remove('error');
+    }
+
+    if (!email || !email.includes('@')) {
+      document.getElementById('regEmailErr').classList.add('show');
+      document.getElementById('regEmail').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('regEmailErr').classList.remove('show');
+      document.getElementById('regEmail').classList.remove('error');
+    }
+
+    if (!phone || phone.length !== 10 || isNaN(phone)) {
+      document.getElementById('regPhoneErr').classList.add('show');
+      document.getElementById('regPhone').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('regPhoneErr').classList.remove('show');
+      document.getElementById('regPhone').classList.remove('error');
+    }
+
+    if (pass.length < 8) {
+      document.getElementById('regPassErr').classList.add('show');
+      document.getElementById('regPassword').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('regPassErr').classList.remove('show');
+      document.getElementById('regPassword').classList.remove('error');
+    }
+
+    if (!terms) { alert('Please agree to the Terms of Service.'); valid = false; }
+    if (!valid) return;
+
+    // In real app: POST /register → Flask inserts into USER table in MySQL
+    const btn = document.querySelector('#registerForm .submit-btn');
+    btn.textContent = 'Creating account...';
+    btn.classList.add('loading');
+    setTimeout(() => {
+      document.getElementById('registerFields').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+    }, 1200);
+  }
+
+  // Password strength checker
+  function checkStrength(val) {
+    const bar   = document.getElementById('pwBar');
+    const label = document.getElementById('pwLabel');
+    if (!val) { bar.style.width='0%'; label.textContent='Enter a password'; return; }
+    let strength = 0;
+    if (val.length >= 8)              strength++;
+    if (/[A-Z]/.test(val))            strength++;
+    if (/[0-9]/.test(val))            strength++;
+    if (/[^A-Za-z0-9]/.test(val))     strength++;
+    const levels = [
+      { w:'25%',  bg:'#EF4444', lbl:'Weak' },
+      { w:'50%',  bg:'#F59E0B', lbl:'Fair' },
+      { w:'75%',  bg:'#3B82F6', lbl:'Good' },
+      { w:'100%', bg:'#00A86B', lbl:'Strong 💪' },
+    ];
+    const lvl = levels[strength - 1] || levels[0];
+    bar.style.width      = lvl.w;
+    bar.style.background = lvl.bg;
+    label.textContent    = lvl.lbl;
+  }
+
+  // Allow Enter key on login
+  document.getElementById('loginPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+</script>
+</body>
+</html>

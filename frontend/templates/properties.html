@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — Properties</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 2.5rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-logo-icon{width:36px;height:36px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .nav-logo-text{font-family:var(--serif);font-size:1.4rem;color:var(--navy);font-weight:700}
+    .nav-logo-text span{color:var(--green)}
+    .nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+    .nav-links a{padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;color:var(--text-muted);transition:all .18s}
+    .nav-links a:hover,.nav-links a.active{color:var(--navy);background:var(--bg)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.3rem;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+    .btn-ghost{background:transparent;color:var(--text-muted)}
+    .btn-ghost:hover{color:var(--navy)}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+    .btn-outline:hover{border-color:var(--navy);background:var(--navy-light)}
+    .btn-navy{background:var(--navy);color:white}
+    .btn-navy:hover{background:var(--navy-mid);transform:translateY(-1px)}
+    .btn-green{background:var(--green);color:white}
+    .btn-green:hover{background:var(--green-dark);transform:translateY(-1px)}
+
+    /* PAGE HEADER */
+    .page-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);padding:3rem 2.5rem;color:white}
+    .page-header-inner{max-width:1280px;margin:0 auto}
+    .breadcrumb{font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+    .breadcrumb a{color:rgba(255,255,255,.55)}
+    .breadcrumb a:hover{color:white}
+    .page-header h1{font-family:var(--serif);font-size:2.2rem;margin-bottom:.5rem}
+    .page-header p{color:rgba(255,255,255,.65);font-size:.95rem}
+
+    /* SEARCH BAR */
+    .search-bar-wrap{background:white;border-bottom:1px solid var(--border);padding:1rem 2.5rem;position:sticky;top:68px;z-index:100;box-shadow:var(--shadow-sm)}
+    .search-bar-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:1rem}
+    .search-input-wrap{flex:1;display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem 1rem;transition:border-color .2s}
+    .search-input-wrap:focus-within{border-color:var(--navy)}
+    .search-input-wrap input{border:none;outline:none;font-family:var(--sans);font-size:.9rem;color:var(--text);background:transparent;width:100%}
+    .sort-select{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem 1rem;font-family:var(--sans);font-size:.875rem;color:var(--text);background:white;cursor:pointer;outline:none}
+    .results-count{font-size:.875rem;color:var(--text-muted);white-space:nowrap}
+
+    /* LAYOUT */
+    .page-body{max-width:1280px;margin:0 auto;padding:2rem 2.5rem;display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:start}
+
+    /* SIDEBAR FILTERS */
+    .sidebar{position:sticky;top:140px}
+    .filter-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+    .filter-card-title{font-weight:700;font-size:.875rem;color:var(--navy);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+    .filter-clear{font-size:.75rem;color:var(--green);cursor:pointer;font-weight:500}
+    .filter-clear:hover{text-decoration:underline}
+
+    /* Price range */
+    .price-inputs{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem}
+    .price-input{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.5rem .75rem;font-family:var(--sans);font-size:.85rem;color:var(--text);width:100%;outline:none}
+    .price-input:focus{border-color:var(--navy)}
+    .price-slider{width:100%;accent-color:var(--navy);cursor:pointer}
+
+    /* Checkboxes */
+    .filter-option{display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;cursor:pointer}
+    .filter-option:hover .filter-label{color:var(--navy)}
+    .filter-checkbox{width:16px;height:16px;accent-color:var(--navy);cursor:pointer;flex-shrink:0}
+    .filter-label{font-size:.875rem;color:var(--text-muted);flex:1;margin-left:.6rem}
+    .filter-count{font-size:.75rem;color:var(--text-light);background:var(--bg);padding:.15rem .5rem;border-radius:99px}
+
+    /* Apply btn */
+    .apply-btn{width:100%;padding:.75rem;background:var(--navy);color:white;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s;margin-top:.5rem}
+    .apply-btn:hover{background:var(--navy-mid)}
+
+    /* PROPERTY GRID */
+    .props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+    .prop-card{background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:all .25s;cursor:pointer}
+    .prop-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-5px)}
+    .prop-card.hidden{display:none}
+    .prop-img-wrap{position:relative;height:210px;overflow:hidden}
+    .prop-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .prop-card:hover .prop-img-wrap img{transform:scale(1.06)}
+    .prop-status{position:absolute;top:12px;left:12px;padding:.25rem .7rem;border-radius:99px;font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+    .status-available{background:var(--green);color:white}
+    .status-booked{background:var(--amber);color:white}
+    .status-rented{background:#EF4444;color:white}
+    .prop-type-badge{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.55);color:white;padding:.22rem .6rem;border-radius:99px;font-size:.67rem;font-weight:600;text-transform:capitalize;backdrop-filter:blur(4px)}
+    .prop-save{position:absolute;bottom:12px;right:12px;width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:var(--shadow-md);cursor:pointer;transition:transform .2s}
+    .prop-save:hover{transform:scale(1.15)}
+    .prop-body{padding:1.25rem}
+    .prop-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:.3rem}
+    .prop-price{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--navy)}
+    .prop-price-unit{font-size:.78rem;color:var(--text-muted)}
+    .prop-name{font-weight:600;font-size:.95rem;color:var(--text);margin-bottom:.25rem}
+    .prop-loc{font-size:.8rem;color:var(--text-muted);display:flex;align-items:center;gap:4px;margin-bottom:.9rem}
+    .prop-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem}
+    .prop-tag{font-size:.68rem;font-weight:500;background:var(--bg);color:var(--text-muted);border:1px solid var(--border);padding:.18rem .6rem;border-radius:99px}
+    .prop-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--border)}
+    .prop-landlord{display:flex;align-items:center;gap:6px}
+    .landlord-avatar{width:26px;height:26px;border-radius:50%;background:var(--navy-light);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--navy)}
+    .landlord-name{font-size:.75rem;font-weight:600;color:var(--text)}
+    .landlord-rating{font-size:.68rem;color:var(--amber)}
+
+    /* NO RESULTS */
+    .no-results{text-align:center;padding:4rem 2rem;color:var(--text-muted);grid-column:1/-1;display:none}
+    .no-results.show{display:block}
+    .no-results-icon{font-size:3rem;margin-bottom:1rem}
+
+    /* FOOTER */
+    .footer{background:var(--navy);padding:3rem 2.5rem 2rem;margin-top:4rem}
+    .footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .footer-logo{font-family:var(--serif);font-size:1.3rem;color:white;font-weight:700}
+    .footer-logo span{color:#6EE7B7}
+    .footer-links{display:flex;gap:2rem}
+    .footer-links a{font-size:.85rem;color:rgba(255,255,255,.45);transition:color .18s}
+    .footer-links a:hover{color:white}
+    .footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🏠</div>
+      <div class="nav-logo-text">Rent<span>Mate</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="properties.html" class="active">Properties</a></li>
+      <li><a href="flatmates.html">Find Flatmate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-ghost">Login</a>
+      <a href="auth.html" class="btn btn-green">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> › Properties
+    </div>
+    <h1>Browse Properties</h1>
+    <p>6 properties available across Chennai and Bangalore</p>
+  </div>
+</div>
+
+<!-- STICKY SEARCH BAR -->
+<div class="search-bar-wrap">
+  <div class="search-bar-inner">
+    <div class="search-input-wrap">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search by title, city, or area..." oninput="applyFilters()" />
+    </div>
+    <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+      <option value="default">Sort: Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="rating-desc">Rating: Highest</option>
+    </select>
+    <span class="results-count" id="resultsCount">Showing 6 properties</span>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- City Filter -->
+    <div class="filter-card">
+      <div class="filter-card-title">
+        City
+        <span class="filter-clear" onclick="clearFilter('city')">Clear</span>
+      </div>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="city" value="Chennai" onchange="applyFilters()" />
+        <span class="filter-label">Chennai</span>
+        <span class="filter-count">5</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="city" value="Bangalore" onchange="applyFilters()" />
+        <span class="filter-label">Bangalore</span>
+        <span class="filter-count">3</span>
+      </label>
+    </div>
+
+    <!-- Budget Filter -->
+    <div class="filter-card">
+      <div class="filter-card-title">
+        Budget (per month)
+        <span class="filter-clear" onclick="clearFilter('budget')">Clear</span>
+      </div>
+      <div class="price-inputs">
+        <input type="number" class="price-input" id="minPrice" placeholder="Min ₹" oninput="applyFilters()" />
+        <input type="number" class="price-input" id="maxPrice" placeholder="Max ₹" oninput="applyFilters()" />
+      </div>
+      <label class="filter-option">
+        <input type="radio" class="filter-checkbox" name="budget" value="10000" onchange="applyFilters()" />
+        <span class="filter-label">Under ₹10,000</span>
+        <span class="filter-count">1</span>
+      </label>
+      <label class="filter-option">
+        <input type="radio" class="filter-checkbox" name="budget" value="20000" onchange="applyFilters()" />
+        <span class="filter-label">₹10,000 – ₹20,000</span>
+        <span class="filter-count">2</span>
+      </label>
+      <label class="filter-option">
+        <input type="radio" class="filter-checkbox" name="budget" value="30000" onchange="applyFilters()" />
+        <span class="filter-label">₹20,000 – ₹30,000</span>
+        <span class="filter-count">2</span>
+      </label>
+      <label class="filter-option">
+        <input type="radio" class="filter-checkbox" name="budget" value="99999" onchange="applyFilters()" />
+        <span class="filter-label">Above ₹30,000</span>
+        <span class="filter-count">1</span>
+      </label>
+    </div>
+
+    <!-- Property Type -->
+    <div class="filter-card">
+      <div class="filter-card-title">
+        Property Type
+        <span class="filter-clear" onclick="clearFilter('type')">Clear</span>
+      </div>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="type" value="apartment" onchange="applyFilters()" />
+        <span class="filter-label">Apartment</span>
+        <span class="filter-count">3</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="type" value="house" onchange="applyFilters()" />
+        <span class="filter-label">House</span>
+        <span class="filter-count">1</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="type" value="studio" onchange="applyFilters()" />
+        <span class="filter-label">Studio</span>
+        <span class="filter-count">2</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="type" value="pg" onchange="applyFilters()" />
+        <span class="filter-label">PG</span>
+        <span class="filter-count">1</span>
+      </label>
+    </div>
+
+    <!-- Amenities -->
+    <div class="filter-card">
+      <div class="filter-card-title">
+        Amenities
+        <span class="filter-clear" onclick="clearFilter('amenity')">Clear</span>
+      </div>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="amenity" value="wifi" onchange="applyFilters()" />
+        <span class="filter-label">📶 WiFi</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="amenity" value="ac" onchange="applyFilters()" />
+        <span class="filter-label">❄️ Air Conditioning</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="amenity" value="parking" onchange="applyFilters()" />
+        <span class="filter-label">🚗 Parking</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="amenity" value="gym" onchange="applyFilters()" />
+        <span class="filter-label">🏋️ Gym</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="amenity" value="pool" onchange="applyFilters()" />
+        <span class="filter-label">🏊 Swimming Pool</span>
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" class="filter-checkbox" name="amenity" value="security" onchange="applyFilters()" />
+        <span class="filter-label">🔒 Security Guard</span>
+      </label>
+    </div>
+
+    <button class="apply-btn" onclick="resetFilters()">Reset All Filters</button>
+  </aside>
+
+  <!-- PROPERTY CARDS -->
+  <main>
+    <div class="props-grid" id="propsGrid">
+
+      <div class="prop-card"
+           data-type="apartment" data-city="Chennai" data-price="18000"
+           data-amenities="wifi ac parking lift power-backup" data-rating="4.5"
+           onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80" alt="2BHK Adyar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span>
+          <span class="prop-type-badge">Apartment</span>
+          <div class="prop-save" onclick="event.stopPropagation();toggleSave(this)">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹18,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">2BHK Apartment in Adyar</div>
+          <div class="prop-loc">📍 Adyar, Chennai &nbsp;·&nbsp; 950 sq.ft</div>
+          <div class="prop-tags">
+            <span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span>
+            <span class="prop-tag">🚗 Parking</span><span class="prop-tag">🔋 Power Backup</span><span class="prop-tag">🛗 Lift</span>
+          </div>
+          <div class="prop-footer">
+            <div class="prop-landlord">
+              <div class="landlord-avatar">AS</div>
+              <div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5</div></div>
+            </div>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card"
+           data-type="studio" data-city="Chennai" data-price="9500"
+           data-amenities="wifi ac washing-machine" data-rating="4.5"
+           onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&q=80" alt="Studio Anna Nagar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span>
+          <span class="prop-type-badge">Studio</span>
+          <div class="prop-save" onclick="event.stopPropagation();toggleSave(this)">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹9,500</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">Spacious Studio near Anna Nagar</div>
+          <div class="prop-loc">📍 Anna Nagar, Chennai &nbsp;·&nbsp; 450 sq.ft</div>
+          <div class="prop-tags">
+            <span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🫧 Washing Machine</span>
+          </div>
+          <div class="prop-footer">
+            <div class="prop-landlord">
+              <div class="landlord-avatar">AS</div>
+              <div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5</div></div>
+            </div>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card"
+           data-type="apartment" data-city="Bangalore" data-price="22000"
+           data-amenities="wifi ac parking gym lift cctv" data-rating="4.7"
+           onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=700&q=80" alt="1BHK Koramangala" loading="lazy"/>
+          <span class="prop-status status-available">Available</span>
+          <span class="prop-type-badge">Apartment</span>
+          <div class="prop-save" onclick="event.stopPropagation();toggleSave(this)">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹22,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">Modern 1BHK in Koramangala</div>
+          <div class="prop-loc">📍 Koramangala, Bangalore &nbsp;·&nbsp; 700 sq.ft</div>
+          <div class="prop-tags">
+            <span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span>
+            <span class="prop-tag">🏋️ Gym</span><span class="prop-tag">📹 CCTV</span><span class="prop-tag">🛗 Lift</span>
+          </div>
+          <div class="prop-footer">
+            <div class="prop-landlord">
+              <div class="landlord-avatar">KP</div>
+              <div><div class="landlord-name">Karan Patel</div><div class="landlord-rating">⭐ 4.7</div></div>
+            </div>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card"
+           data-type="house" data-city="Chennai" data-price="35000"
+           data-amenities="wifi ac parking gym pool power-backup" data-rating="3.8"
+           onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&q=80" alt="3BHK T Nagar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span>
+          <span class="prop-type-badge">House</span>
+          <div class="prop-save" onclick="event.stopPropagation();toggleSave(this)">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹35,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">3BHK House in T Nagar</div>
+          <div class="prop-loc">📍 T Nagar, Chennai &nbsp;·&nbsp; 1400 sq.ft</div>
+          <div class="prop-tags">
+            <span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span>
+            <span class="prop-tag">🚗 Parking</span><span class="prop-tag">🏋️ Gym</span><span class="prop-tag">🏊 Pool</span>
+          </div>
+          <div class="prop-footer">
+            <div class="prop-landlord">
+              <div class="landlord-avatar">RV</div>
+              <div><div class="landlord-name">Rahul Verma</div><div class="landlord-rating">⭐ 3.8</div></div>
+            </div>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card"
+           data-type="studio" data-city="Bangalore" data-price="11000"
+           data-amenities="wifi washing-machine" data-rating="4.1"
+           onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80" alt="Studio Koramangala" loading="lazy"/>
+          <span class="prop-status status-available">Available</span>
+          <span class="prop-type-badge">Studio</span>
+          <div class="prop-save" onclick="event.stopPropagation();toggleSave(this)">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹11,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">Cozy Studio in Koramangala</div>
+          <div class="prop-loc">📍 Koramangala, Bangalore &nbsp;·&nbsp; 400 sq.ft</div>
+          <div class="prop-tags">
+            <span class="prop-tag">📶 WiFi</span><span class="prop-tag">🫧 Washing Machine</span>
+          </div>
+          <div class="prop-footer">
+            <div class="prop-landlord">
+              <div class="landlord-avatar">AM</div>
+              <div><div class="landlord-name">Amit Singh</div><div class="landlord-rating">⭐ 4.1</div></div>
+            </div>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card"
+           data-type="apartment" data-city="Bangalore" data-price="25000"
+           data-amenities="wifi ac parking security lift" data-rating="3.9"
+           onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=80" alt="2BHK Indiranagar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span>
+          <span class="prop-type-badge">Apartment</span>
+          <div class="prop-save" onclick="event.stopPropagation();toggleSave(this)">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹25,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">2BHK near Indiranagar Metro</div>
+          <div class="prop-loc">📍 Indiranagar, Bangalore &nbsp;·&nbsp; 850 sq.ft</div>
+          <div class="prop-tags">
+            <span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span>
+            <span class="prop-tag">🚗 Parking</span><span class="prop-tag">🔒 Security</span><span class="prop-tag">🛗 Lift</span>
+          </div>
+          <div class="prop-footer">
+            <div class="prop-landlord">
+              <div class="landlord-avatar">RG</div>
+              <div><div class="landlord-name">Rohan Gupta</div><div class="landlord-rating">⭐ 3.9</div></div>
+            </div>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-results" id="noResults">
+        <div class="no-results-icon">🏚️</div>
+        <h3 style="color:var(--navy);margin-bottom:.5rem;">No properties found</h3>
+        <p>Try adjusting your filters or search term.</p>
+        <button class="btn btn-outline" style="margin-top:1rem;" onclick="resetFilters()">Reset Filters</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">🏠 Rent<span>Mate</span></div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="flatmates.html">Find Flatmate</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="auth.html">Login</a>
+    </div>
+    <div class="footer-copy">© 2025 RentMate · DBMS Assignment</div>
+  </div>
+</footer>
+
+<script>
+  // ── Read URL params on load ───────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const city   = params.get('city');
+    const budget = params.get('budget');
+    if (city) {
+      // Pre-check city filter if coming from search
+      document.querySelectorAll('input[name="city"]').forEach(cb => {
+        if (cb.value.toLowerCase() === city.toLowerCase()) cb.checked = true;
+      });
+    }
+    if (budget) {
+      document.getElementById('maxPrice').value = budget;
+    }
+    applyFilters();
+  });
+
+  // ── Main filter function ──────────────────────────────────
+  function applyFilters() {
+    const search   = document.getElementById('searchInput').value.toLowerCase();
+    const sort     = document.getElementById('sortSelect').value;
+    const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+    const maxPrice = parseInt(document.getElementById('maxPrice').value) || 999999;
+
+    const checkedCities    = [...document.querySelectorAll('input[name="city"]:checked')].map(c => c.value);
+    const checkedTypes     = [...document.querySelectorAll('input[name="type"]:checked')].map(c => c.value);
+    const checkedAmenities = [...document.querySelectorAll('input[name="amenity"]:checked')].map(c => c.value);
+    const checkedBudget    = document.querySelector('input[name="budget"]:checked');
+
+    let cards = [...document.querySelectorAll('.prop-card')];
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const city     = card.dataset.city;
+      const type     = card.dataset.type;
+      const price    = parseInt(card.dataset.price);
+      const amenities= card.dataset.amenities;
+      const name     = card.querySelector('.prop-name').textContent.toLowerCase();
+      const loc      = card.querySelector('.prop-loc').textContent.toLowerCase();
+
+      let show = true;
+
+      // Search filter
+      if (search && !name.includes(search) && !loc.includes(search)) show = false;
+
+      // City filter
+      if (checkedCities.length && !checkedCities.includes(city)) show = false;
+
+      // Type filter
+      if (checkedTypes.length && !checkedTypes.includes(type)) show = false;
+
+      // Budget radio
+      if (checkedBudget) {
+        if (price > parseInt(checkedBudget.value)) show = false;
+      }
+
+      // Manual min/max price
+      if (price < minPrice || price > maxPrice) show = false;
+
+      // Amenity filter (card must have ALL checked amenities)
+      if (checkedAmenities.length) {
+        const hasAll = checkedAmenities.every(a => amenities.includes(a));
+        if (!hasAll) show = false;
+      }
+
+      card.style.display = show ? '' : 'none';
+      if (show) visibleCount++;
+    });
+
+    // Sort visible cards
+    if (sort !== 'default') {
+      const grid = document.getElementById('propsGrid');
+      const visibleCards = cards.filter(c => c.style.display !== 'none');
+      visibleCards.sort((a, b) => {
+        if (sort === 'price-asc')  return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+        if (sort === 'price-desc') return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+        if (sort === 'rating-desc')return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+        return 0;
+      });
+      visibleCards.forEach(c => grid.appendChild(c));
+    }
+
+    // Update count
+    document.getElementById('resultsCount').textContent =
+      `Showing ${visibleCount} propert${visibleCount === 1 ? 'y' : 'ies'}`;
+
+    // Show no results message
+    document.getElementById('noResults').classList.toggle('show', visibleCount === 0);
+  }
+
+  // ── Clear individual filter groups ────────────────────────
+  function clearFilter(group) {
+    if (group === 'city')   document.querySelectorAll('input[name="city"]').forEach(c => c.checked = false);
+    if (group === 'type')   document.querySelectorAll('input[name="type"]').forEach(c => c.checked = false);
+    if (group === 'amenity')document.querySelectorAll('input[name="amenity"]').forEach(c => c.checked = false);
+    if (group === 'budget') {
+      document.querySelectorAll('input[name="budget"]').forEach(c => c.checked = false);
+      document.getElementById('minPrice').value = '';
+      document.getElementById('maxPrice').value = '';
+    }
+    applyFilters();
+  }
+
+  // ── Reset all filters ─────────────────────────────────────
+  function resetFilters() {
+    document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false);
+    document.getElementById('minPrice').value = '';
+    document.getElementById('maxPrice').value = '';
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortSelect').value = 'default';
+    applyFilters();
+  }
+
+  // ── Save / Wishlist toggle ────────────────────────────────
+  function toggleSave(el) {
+    el.textContent = el.textContent === '🤍' ? '❤️' : '🤍';
+  }
+
+  // ── Scroll animations ─────────────────────────────────────
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity=1; e.target.style.transform='translateY(0)'; }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.prop-card').forEach(el => {
+    el.style.opacity=0; el.style.transform='translateY(20px)';
+    el.style.transition='opacity .4s ease,transform .4s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--amber-light:#FEF3DC;
+      --red:#EF4444;--red-light:#FEE2E2;
+      --text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+      --sidebar:240px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+    a{text-decoration:none;color:inherit}
+
+    /* SIDEBAR */
+    .sidebar{background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);z-index:100;overflow-y:auto}
+    .sidebar-logo{padding:1.75rem 1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.08)}
+    .logo-wrap{display:flex;align-items:center;gap:10px}
+    .logo-icon{width:34px;height:34px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+    .logo-text{font-family:var(--serif);font-size:1.3rem;color:white;font-weight:700}
+    .logo-text span{color:#6EE7B7}
+    .sidebar-user{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+    .user-avatar{width:44px;height:44px;border-radius:50%;background:var(--navy-mid);border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;color:white;margin-bottom:.6rem}
+    .user-name{font-weight:600;font-size:.9rem;color:white}
+    .user-role{font-size:.72rem;color:rgba(255,255,255,.45);margin-top:2px}
+    .user-rep{display:flex;align-items:center;gap:4px;margin-top:.4rem;font-size:.72rem;color:rgba(255,255,255,.55)}
+    .rep-score{color:#F59E0B;font-weight:600}
+    .sidebar-nav{padding:1rem 0;flex:1}
+    .nav-section-label{padding:.5rem 1.5rem;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-top:.5rem}
+    .nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.5rem;font-size:.875rem;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:all .18s;border-left:3px solid transparent}
+    .nav-item:hover{color:white;background:rgba(255,255,255,.06)}
+    .nav-item.active{color:white;background:rgba(255,255,255,.08);border-left-color:var(--green)}
+    .nav-icon{font-size:1rem;width:20px;text-align:center}
+    .nav-badge{margin-left:auto;background:var(--red);color:white;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;min-width:18px;text-align:center}
+    .sidebar-footer{padding:1.25rem 1.5rem;border-top:1px solid rgba(255,255,255,.08)}
+    .logout-btn{display:flex;align-items:center;gap:.6rem;font-size:.82rem;color:rgba(255,255,255,.4);cursor:pointer;transition:color .18s}
+    .logout-btn:hover{color:white}
+
+    /* MAIN CONTENT */
+    .main{margin-left:var(--sidebar);padding:2rem 2.5rem;min-height:100vh}
+
+    /* TOP BAR */
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+    .topbar-left h1{font-family:var(--serif);font-size:1.8rem;color:var(--navy)}
+    .topbar-left p{font-size:.875rem;color:var(--text-muted);margin-top:2px}
+    .topbar-right{display:flex;align-items:center;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:.5rem 1.1rem;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+    .btn-outline:hover{border-color:var(--navy);background:var(--navy-light)}
+    .btn-green{background:var(--green);color:white}
+    .btn-green:hover{background:var(--green-dark)}
+    .btn-navy{background:var(--navy);color:white}
+    .btn-navy:hover{background:var(--navy-mid)}
+    .notif-btn{position:relative;width:38px;height:38px;border-radius:var(--radius-sm);background:white;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem}
+    .notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid white}
+
+    /* STATS STRIP */
+    .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:2rem}
+    .stat-card{background:white;border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:1rem}
+    .stat-icon-wrap{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .stat-num{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--navy);line-height:1}
+    .stat-lbl{font-size:.72rem;color:var(--text-muted);margin-top:3px}
+    .stat-change{font-size:.7rem;margin-top:4px;font-weight:500}
+    .change-up{color:var(--green)}
+    .change-down{color:var(--red)}
+
+    /* GRID LAYOUT */
+    .dashboard-grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start}
+
+    /* SECTION CARD */
+    .section-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);margin-bottom:1.5rem}
+    .section-card:last-child{margin-bottom:0}
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+    .section-title{font-weight:700;font-size:1rem;color:var(--navy)}
+    .section-link{font-size:.78rem;color:var(--green);font-weight:500;cursor:pointer}
+    .section-link:hover{text-decoration:underline}
+
+    /* BOOKING ROWS */
+    .booking-row{display:flex;align-items:center;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--border)}
+    .booking-row:last-child{border-bottom:none;padding-bottom:0}
+    .booking-img{width:60px;height:48px;border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0}
+    .booking-img img{width:100%;height:100%;object-fit:cover}
+    .booking-info{flex:1}
+    .booking-name{font-weight:600;font-size:.875rem;color:var(--text);margin-bottom:2px}
+    .booking-loc{font-size:.75rem;color:var(--text-muted)}
+    .booking-date{font-size:.72rem;color:var(--text-light);margin-top:2px}
+    .booking-price{font-weight:700;font-size:.9rem;color:var(--navy);text-align:right;flex-shrink:0}
+    .booking-price-unit{font-size:.68rem;color:var(--text-muted);font-weight:400}
+    .status-pill{display:inline-flex;align-items:center;gap:4px;padding:.2rem .65rem;border-radius:99px;font-size:.68rem;font-weight:600;text-transform:capitalize;margin-top:3px}
+    .pill-confirmed{background:var(--green-light);color:var(--green-dark)}
+    .pill-pending{background:var(--amber-light);color:#92400E}
+    .pill-cancelled{background:var(--red-light);color:#991B1B}
+
+    /* LEASE CARD */
+    .lease-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--radius-md);padding:1.25rem;color:white;margin-bottom:1rem;position:relative;overflow:hidden}
+    .lease-card::before{content:'';position:absolute;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%;top:-80px;right:-60px}
+    .lease-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+    .lease-property{font-weight:700;font-size:.95rem}
+    .lease-location{font-size:.75rem;opacity:.65;margin-top:2px}
+    .lease-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);padding:.2rem .65rem;border-radius:99px;font-size:.68rem;font-weight:600}
+    .lease-details{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+    .lease-detail-lbl{font-size:.65rem;opacity:.55;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+    .lease-detail-val{font-weight:700;font-size:.875rem}
+    .lease-progress-bar{height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin-top:1rem;overflow:hidden}
+    .lease-progress-fill{height:100%;background:#6EE7B7;border-radius:2px;width:33%}
+
+    /* MATCH ROWS */
+    .match-row{display:flex;align-items:center;gap:.85rem;padding:.85rem 0;border-bottom:1px solid var(--border)}
+    .match-row:last-child{border-bottom:none;padding-bottom:0}
+    .match-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border)}
+    .match-avatar img{width:100%;height:100%;object-fit:cover}
+    .match-info{flex:1}
+    .match-name{font-weight:600;font-size:.875rem;color:var(--text)}
+    .match-sub{font-size:.72rem;color:var(--text-muted);margin-top:1px}
+    .match-score-wrap{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;gap:4px}
+    .match-score{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--navy)}
+    .match-score-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+    .match-score-fill{height:100%;border-radius:2px;background:var(--green)}
+    .match-actions{display:flex;gap:.4rem;margin-top:.4rem}
+    .mini-btn{padding:.22rem .65rem;border-radius:99px;font-size:.68rem;font-weight:600;cursor:pointer;border:1px solid;transition:all .18s}
+    .mini-btn-green{border-color:var(--green);color:var(--green);background:transparent}
+    .mini-btn-green:hover{background:var(--green);color:white}
+    .mini-btn-outline{border-color:var(--border);color:var(--text-muted);background:transparent}
+    .mini-btn-outline:hover{border-color:var(--text-muted)}
+
+    /* NOTIFICATIONS */
+    .notif-item{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 0;border-bottom:1px solid var(--border)}
+    .notif-item:last-child{border-bottom:none;padding-bottom:0}
+    .notif-item.unread{background:linear-gradient(90deg,rgba(0,168,107,.04),transparent);margin:0 -1.5rem;padding-left:1.5rem;padding-right:1.5rem}
+    .notif-icon-wrap{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .notif-icon-green{background:var(--green-light)}
+    .notif-icon-amber{background:var(--amber-light)}
+    .notif-icon-navy{background:var(--navy-light)}
+    .notif-icon-red{background:var(--red-light)}
+    .notif-msg{font-size:.82rem;color:var(--text);line-height:1.55;flex:1}
+    .notif-msg strong{color:var(--navy)}
+    .notif-time{font-size:.7rem;color:var(--text-light);margin-top:3px}
+    .unread-dot{width:7px;height:7px;background:var(--green);border-radius:50%;flex-shrink:0;margin-top:6px}
+
+    /* QUICK ACTIONS */
+    .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+    .quick-action{background:white;border:1px solid var(--border);border-radius:var(--radius-md);padding:1.1rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-sm)}
+    .quick-action:hover{border-color:var(--navy);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .qa-icon{width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+    .qa-title{font-weight:600;font-size:.82rem;color:var(--navy)}
+    .qa-sub{font-size:.7rem;color:var(--text-muted);margin-top:1px}
+
+    /* PROFILE COMPLETION */
+    .profile-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);margin-bottom:1.5rem}
+    .profile-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+    .profile-avatar-lg{width:52px;height:52px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:white}
+    .profile-name{font-weight:700;font-size:1rem;color:var(--navy)}
+    .profile-sub{font-size:.75rem;color:var(--text-muted)}
+    .completion-bar-wrap{margin-bottom:.5rem}
+    .completion-label{display:flex;justify-content:space-between;font-size:.72rem;margin-bottom:.4rem}
+    .completion-label span:first-child{color:var(--text-muted)}
+    .completion-label span:last-child{font-weight:600;color:var(--navy)}
+    .completion-track{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+    .completion-fill{height:100%;background:linear-gradient(90deg,var(--green),#3B82F6);border-radius:4px;width:65%}
+    .completion-items{display:flex;flex-direction:column;gap:.4rem;margin-top:.85rem}
+    .completion-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem}
+    .ci-done{color:var(--green)}
+    .ci-todo{color:var(--text-light)}
+
+    /* EMPTY STATE */
+    .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted)}
+    .empty-icon{font-size:2.5rem;margin-bottom:.75rem}
+    .empty-title{font-weight:600;font-size:.9rem;color:var(--navy);margin-bottom:.35rem}
+    .empty-sub{font-size:.8rem;line-height:1.6}
+
+    /* TAB SWITCHER inside section */
+    .inner-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.25rem}
+    .inner-tab{padding:.45rem 1rem;font-size:.82rem;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .18s}
+    .inner-tab.active{color:var(--navy);border-bottom-color:var(--navy)}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <a href="index.html" class="logo-wrap">
+      <div class="logo-icon">🏠</div>
+      <div class="logo-text">Rent<span>Mate</span></div>
+    </a>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">PM</div>
+    <div class="user-name">Priya Menon</div>
+    <div class="user-role">Tenant · Chennai</div>
+    <div class="user-rep">⭐ Reputation: <span class="rep-score">4.2</span> / 5.0</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <div class="nav-item active" onclick="showSection('overview')">
+      <span class="nav-icon">📊</span> Overview
+    </div>
+    <div class="nav-item" onclick="showSection('bookings')">
+      <span class="nav-icon">📋</span> My Bookings
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showSection('leases')">
+      <span class="nav-icon">📄</span> My Leases
+    </div>
+
+    <div class="nav-section-label">Flatmate</div>
+    <div class="nav-item" onclick="showSection('matches')">
+      <span class="nav-icon">🤝</span> My Matches
+      <span class="nav-badge">2</span>
+    </div>
+    <div class="nav-item" onclick="location.href='flatmates.html'">
+      <span class="nav-icon">🔍</span> Find Flatmates
+    </div>
+
+    <div class="nav-section-label">Account</div>
+    <div class="nav-item" onclick="showSection('notifications')">
+      <span class="nav-icon">🔔</span> Notifications
+      <span class="nav-badge">4</span>
+    </div>
+    <div class="nav-item" onclick="location.href='profile.html'">
+      <span class="nav-icon">👤</span> My Profile
+    </div>
+    <div class="nav-item" onclick="location.href='properties.html'">
+      <span class="nav-icon">🏠</span> Browse Properties
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="logout-btn" onclick="location.href='auth.html'">
+      🚪 Logout
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ── OVERVIEW SECTION ── -->
+  <div id="section-overview">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>Good morning, Priya 👋</h1>
+        <p>Here's what's happening with your account today.</p>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-btn" onclick="showSection('notifications')">
+          🔔 <div class="notif-dot"></div>
+        </div>
+        <a href="properties.html" class="btn btn-green">+ Find Property</a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-strip">
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background:#EEF2FF;">📋</div>
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-lbl">Active Bookings</div>
+          <div class="stat-change change-up">↑ 1 new this week</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background:var(--green-light);">📄</div>
+        <div>
+          <div class="stat-num">1</div>
+          <div class="stat-lbl">Active Lease</div>
+          <div class="stat-change change-up">✅ Confirmed</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background:var(--amber-light);">🤝</div>
+        <div>
+          <div class="stat-num">6</div>
+          <div class="stat-lbl">Flatmate Matches</div>
+          <div class="stat-change change-up">↑ 2 new matches</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background:var(--red-light);">🔔</div>
+        <div>
+          <div class="stat-num">4</div>
+          <div class="stat-lbl">Unread Notifications</div>
+          <div class="stat-change change-down">Needs attention</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div>
+        <!-- Recent Bookings -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">Recent Bookings</div>
+            <span class="section-link" onclick="showSection('bookings')">View all →</span>
+          </div>
+          <div class="booking-row">
+            <div class="booking-img"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&q=80" alt="Adyar" /></div>
+            <div class="booking-info">
+              <div class="booking-name">2BHK Apartment in Adyar</div>
+              <div class="booking-loc">📍 Adyar, Chennai</div>
+              <div class="booking-date">Requested: Jan 1, 2025</div>
+              <span class="status-pill pill-confirmed">✅ Confirmed</span>
+            </div>
+            <div style="text-align:right">
+              <div class="booking-price">₹18,000<div class="booking-price-unit">/month</div></div>
+            </div>
+          </div>
+          <div class="booking-row">
+            <div class="booking-img"><img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=200&q=80" alt="Koramangala" /></div>
+            <div class="booking-info">
+              <div class="booking-name">Modern 1BHK in Koramangala</div>
+              <div class="booking-loc">📍 Koramangala, Bangalore</div>
+              <div class="booking-date">Requested: Apr 20, 2025</div>
+              <span class="status-pill pill-pending">⏳ Pending</span>
+            </div>
+            <div style="text-align:right">
+              <div class="booking-price">₹22,000<div class="booking-price-unit">/month</div></div>
+            </div>
+          </div>
+          <div class="booking-row">
+            <div class="booking-img"><img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&q=80" alt="Studio" /></div>
+            <div class="booking-info">
+              <div class="booking-name">Cozy Studio in Koramangala</div>
+              <div class="booking-loc">📍 Koramangala, Bangalore</div>
+              <div class="booking-date">Requested: Mar 5, 2025</div>
+              <span class="status-pill pill-cancelled">❌ Cancelled</span>
+            </div>
+            <div style="text-align:right">
+              <div class="booking-price">₹11,000<div class="booking-price-unit">/month</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Lease -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">Active Lease</div>
+            <span class="section-link" onclick="showSection('leases')">View details →</span>
+          </div>
+          <div class="lease-card">
+            <div class="lease-card-top">
+              <div>
+                <div class="lease-property">2BHK Apartment in Adyar</div>
+                <div class="lease-location">📍 Adyar, Chennai 600020</div>
+              </div>
+              <span class="lease-badge">Active</span>
+            </div>
+            <div class="lease-details">
+              <div>
+                <div class="lease-detail-lbl">Monthly Rent</div>
+                <div class="lease-detail-val">₹17,500</div>
+              </div>
+              <div>
+                <div class="lease-detail-lbl">Start Date</div>
+                <div class="lease-detail-val">Jan 1, 2025</div>
+              </div>
+              <div>
+                <div class="lease-detail-lbl">End Date</div>
+                <div class="lease-detail-val">Dec 31, 2025</div>
+              </div>
+            </div>
+            <div class="lease-progress-bar">
+              <div class="lease-progress-fill"></div>
+            </div>
+            <div style="font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.4rem">4 months completed · 8 months remaining</div>
+          </div>
+        </div>
+
+        <!-- Top Matches -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">Top Flatmate Matches</div>
+            <span class="section-link" onclick="showSection('matches')">View all →</span>
+          </div>
+          <div class="match-row">
+            <div class="match-avatar"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&q=80" alt="Sneha" /></div>
+            <div class="match-info">
+              <div class="match-name">Sneha Iyer</div>
+              <div class="match-sub">Early bird · Veg · Chennai · ⭐ 4.0</div>
+              <div class="match-actions">
+                <button class="mini-btn mini-btn-green">Accept</button>
+                <button class="mini-btn mini-btn-outline">View</button>
+              </div>
+            </div>
+            <div class="match-score-wrap">
+              <div class="match-score">88</div>
+              <div class="match-score-bar"><div class="match-score-fill" style="width:88%"></div></div>
+              <div style="font-size:.65rem;color:var(--text-light);margin-top:2px">out of 100</div>
+            </div>
+          </div>
+          <div class="match-row">
+            <div class="match-avatar"><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=80&q=80" alt="Meera" /></div>
+            <div class="match-info">
+              <div class="match-name">Meera Pillai</div>
+              <div class="match-sub">Night owl · Veg · Chennai · ⭐ 4.3</div>
+              <div class="match-actions">
+                <button class="mini-btn mini-btn-green">Accept</button>
+                <button class="mini-btn mini-btn-outline">View</button>
+              </div>
+            </div>
+            <div class="match-score-wrap">
+              <div class="match-score">72</div>
+              <div class="match-score-bar"><div class="match-score-fill" style="width:72%;background:var(--amber)"></div></div>
+              <div style="font-size:.65rem;color:var(--text-light);margin-top:2px">out of 100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <!-- Profile completion -->
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar-lg">PM</div>
+            <div>
+              <div class="profile-name">Priya Menon</div>
+              <div class="profile-sub">Profile 65% complete</div>
+            </div>
+          </div>
+          <div class="completion-bar-wrap">
+            <div class="completion-label">
+              <span>Profile strength</span>
+              <span>65%</span>
+            </div>
+            <div class="completion-track"><div class="completion-fill"></div></div>
+          </div>
+          <div class="completion-items">
+            <div class="completion-item ci-done">✅ Basic info added</div>
+            <div class="completion-item ci-done">✅ Email verified</div>
+            <div class="completion-item ci-done">✅ Flatmate profile set</div>
+            <div class="completion-item ci-todo">○ Add profile photo</div>
+            <div class="completion-item ci-todo">○ Write a bio</div>
+          </div>
+          <button class="btn btn-navy" style="width:100%;margin-top:1rem;justify-content:center;" onclick="location.href='profile.html'">Complete Profile →</button>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="section-card">
+          <div class="section-header"><div class="section-title">Quick Actions</div></div>
+          <div class="quick-actions">
+            <div class="quick-action" onclick="location.href='properties.html'">
+              <div class="qa-icon" style="background:var(--navy-light);">🔍</div>
+              <div><div class="qa-title">Find Property</div><div class="qa-sub">Browse listings</div></div>
+            </div>
+            <div class="quick-action" onclick="location.href='flatmates.html'">
+              <div class="qa-icon" style="background:var(--green-light);">🤝</div>
+              <div><div class="qa-title">Find Flatmate</div><div class="qa-sub">View matches</div></div>
+            </div>
+            <div class="quick-action" onclick="showSection('notifications')">
+              <div class="qa-icon" style="background:var(--amber-light);">🔔</div>
+              <div><div class="qa-title">Notifications</div><div class="qa-sub">4 unread</div></div>
+            </div>
+            <div class="quick-action" onclick="location.href='profile.html'">
+              <div class="qa-icon" style="background:var(--red-light);">👤</div>
+              <div><div class="qa-title">My Profile</div><div class="qa-sub">65% complete</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Notifications -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">Recent Notifications</div>
+            <span class="section-link" onclick="showSection('notifications')">See all →</span>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap notif-icon-green">🤝</div>
+            <div class="notif-msg">
+              <strong>New match!</strong> You have a new flatmate match with Sneha Iyer. Compatibility score: 88/100.
+              <div class="notif-time">2 hours ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap notif-icon-amber">📋</div>
+            <div class="notif-msg">
+              <strong>Booking update</strong> — Karan Patel has seen your request for Modern 1BHK in Koramangala.
+              <div class="notif-time">5 hours ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon-wrap notif-icon-navy">📄</div>
+            <div class="notif-msg">
+              Your lease for <strong>2BHK Apartment in Adyar</strong> has been confirmed. Move-in: Jan 1, 2025.
+              <div class="notif-time">Jan 1, 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOOKINGS SECTION ── -->
+  <div id="section-bookings" style="display:none">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>My Bookings</h1>
+        <p>All your property booking requests in one place.</p>
+      </div>
+      <div class="topbar-right">
+        <a href="properties.html" class="btn btn-green">+ New Booking</a>
+      </div>
+    </div>
+    <div class="inner-tabs">
+      <div class="inner-tab active">All (3)</div>
+      <div class="inner-tab">Confirmed (1)</div>
+      <div class="inner-tab">Pending (1)</div>
+      <div class="inner-tab">Cancelled (1)</div>
+    </div>
+    <div class="section-card">
+      <div class="booking-row">
+        <div class="booking-img"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&q=80" alt="Adyar" /></div>
+        <div class="booking-info">
+          <div class="booking-name">2BHK Apartment in Adyar</div>
+          <div class="booking-loc">📍 Adyar, Chennai · Arjun Sharma (⭐ 4.5)</div>
+          <div class="booking-date">Requested: Jan 1, 2025 · Booking ID: #1</div>
+          <span class="status-pill pill-confirmed">✅ Confirmed → Lease Active</span>
+        </div>
+        <div style="text-align:right">
+          <div class="booking-price">₹18,000<div class="booking-price-unit">/month</div></div>
+          <button class="btn btn-outline" style="margin-top:.5rem;font-size:.72rem;padding:.3rem .7rem" onclick="showSection('leases')">View Lease</button>
+        </div>
+      </div>
+      <div class="booking-row">
+        <div class="booking-img"><img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=200&q=80" alt="Koramangala" /></div>
+        <div class="booking-info">
+          <div class="booking-name">Modern 1BHK in Koramangala</div>
+          <div class="booking-loc">📍 Koramangala, Bangalore · Karan Patel (⭐ 4.7)</div>
+          <div class="booking-date">Requested: Apr 20, 2025 · Booking ID: #9</div>
+          <span class="status-pill pill-pending">⏳ Awaiting landlord confirmation</span>
+        </div>
+        <div style="text-align:right">
+          <div class="booking-price">₹22,000<div class="booking-price-unit">/month</div></div>
+          <button class="btn btn-outline" style="margin-top:.5rem;font-size:.72rem;padding:.3rem .7rem;color:var(--red);border-color:var(--red)">Cancel</button>
+        </div>
+      </div>
+      <div class="booking-row">
+        <div class="booking-img"><img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&q=80" alt="Studio" /></div>
+        <div class="booking-info">
+          <div class="booking-name">Cozy Studio in Koramangala</div>
+          <div class="booking-loc">📍 Koramangala, Bangalore · Amit Singh (⭐ 4.1)</div>
+          <div class="booking-date">Requested: Mar 5, 2025 · Booking ID: #6</div>
+          <span class="status-pill pill-cancelled">❌ Cancelled by you</span>
+        </div>
+        <div style="text-align:right">
+          <div class="booking-price">₹11,000<div class="booking-price-unit">/month</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LEASES SECTION ── -->
+  <div id="section-leases" style="display:none">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>My Leases</h1>
+        <p>Your confirmed rental agreements.</p>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="lease-card" style="margin-bottom:0">
+        <div class="lease-card-top">
+          <div>
+            <div class="lease-property">2BHK Apartment in Adyar</div>
+            <div class="lease-location">📍 Adyar, Chennai 600020 · Landlord: Arjun Sharma</div>
+          </div>
+          <span class="lease-badge">Active</span>
+        </div>
+        <div class="lease-details">
+          <div><div class="lease-detail-lbl">Monthly Rent</div><div class="lease-detail-val">₹17,500</div></div>
+          <div><div class="lease-detail-lbl">Start Date</div><div class="lease-detail-val">Jan 1, 2025</div></div>
+          <div><div class="lease-detail-lbl">End Date</div><div class="lease-detail-val">Dec 31, 2025</div></div>
+        </div>
+        <div class="lease-progress-bar"><div class="lease-progress-fill"></div></div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.4rem">4 months completed · 8 months remaining · Lease ID: #1</div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:.75rem">
+      <button class="btn btn-outline">📄 Download Lease PDF</button>
+      <button class="btn btn-outline">⭐ Leave a Review</button>
+    </div>
+  </div>
+
+  <!-- ── MATCHES SECTION ── -->
+  <div id="section-matches" style="display:none">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>My Flatmate Matches</h1>
+        <p>Your compatibility matches powered by the matching engine.</p>
+      </div>
+      <div class="topbar-right">
+        <a href="flatmates.html" class="btn btn-green">Find More Matches</a>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">All Matches (6)</div>
+        <span style="font-size:.75rem;color:var(--text-muted)">Sorted by compatibility score</span>
+      </div>
+      <div class="match-row">
+        <div class="match-avatar"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&q=80" alt="Sneha" /></div>
+        <div class="match-info">
+          <div class="match-name">Sneha Iyer · ⭐ 4.0</div>
+          <div class="match-sub">Early bird · Veg · Chennai · Budget: ₹6,000–₹10,000</div>
+          <div class="match-actions"><button class="mini-btn mini-btn-green" onclick="alert('Match accepted!')">Accept ✅</button><button class="mini-btn mini-btn-outline" onclick="location.href='flatmates.html'">View Profile</button></div>
+        </div>
+        <div class="match-score-wrap">
+          <div class="match-score">88</div>
+          <div class="match-score-bar"><div class="match-score-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+      <div class="match-row">
+        <div class="match-avatar"><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=80&q=80" alt="Meera" /></div>
+        <div class="match-info">
+          <div class="match-name">Meera Pillai · ⭐ 4.3</div>
+          <div class="match-sub">Night owl · Veg · Chennai · Budget: ₹9,000–₹16,000</div>
+          <div class="match-actions"><button class="mini-btn mini-btn-green" onclick="alert('Match accepted!')">Accept ✅</button><button class="mini-btn mini-btn-outline" onclick="location.href='flatmates.html'">View Profile</button></div>
+        </div>
+        <div class="match-score-wrap">
+          <div class="match-score">72</div>
+          <div class="match-score-bar"><div class="match-score-fill" style="width:72%;background:var(--amber)"></div></div>
+        </div>
+      </div>
+      <div class="match-row">
+        <div class="match-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="Priya" /></div>
+        <div class="match-info">
+          <div class="match-name">Priya Menon · ⭐ 4.2</div>
+          <div class="match-sub">Early bird · Veg · Chennai · Budget: ₹7,000–₹12,000</div>
+          <div class="match-actions"><span class="status-pill pill-confirmed" style="margin:0">✅ Accepted</span></div>
+        </div>
+        <div class="match-score-wrap">
+          <div class="match-score">88</div>
+          <div class="match-score-bar"><div class="match-score-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NOTIFICATIONS SECTION ── -->
+  <div id="section-notifications" style="display:none">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>Notifications</h1>
+        <p>All alerts generated by your database triggers.</p>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-outline" onclick="markAllRead()">Mark all read</button>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="notif-item unread" id="n1">
+        <div class="notif-icon-wrap notif-icon-green">🤝</div>
+        <div class="notif-msg">
+          <strong>New flatmate match found!</strong> You have a new match with Sneha Iyer. Compatibility score: 88/100. Go to Flatmate Finder to accept.
+          <div class="notif-time">2 hours ago · Trigger: after_match_insert</div>
+        </div>
+        <div class="unread-dot" id="dot-n1"></div>
+      </div>
+      <div class="notif-item unread" id="n2">
+        <div class="notif-icon-wrap notif-icon-amber">📋</div>
+        <div class="notif-msg">
+          <strong>Booking request seen</strong> — Karan Patel has viewed your booking request for Modern 1BHK in Koramangala.
+          <div class="notif-time">5 hours ago · Trigger: after_booking_insert</div>
+        </div>
+        <div class="unread-dot" id="dot-n2"></div>
+      </div>
+      <div class="notif-item unread" id="n3">
+        <div class="notif-icon-wrap notif-icon-green">🤝</div>
+        <div class="notif-msg">
+          <strong>New flatmate match found!</strong> You have a new match with Meera Pillai. Compatibility score: 72/100.
+          <div class="notif-time">1 day ago · Trigger: after_match_insert</div>
+        </div>
+        <div class="unread-dot" id="dot-n3"></div>
+      </div>
+      <div class="notif-item unread" id="n4">
+        <div class="notif-icon-wrap notif-icon-amber">⭐</div>
+        <div class="notif-msg">
+          <strong>New review received!</strong> Arjun Sharma left you a 4-star review. Your new reputation score is: 4.2.
+          <div class="notif-time">3 days ago · Trigger: after_review_insert</div>
+        </div>
+        <div class="unread-dot" id="dot-n4"></div>
+      </div>
+      <div class="notif-item" id="n5">
+        <div class="notif-icon-wrap notif-icon-navy">📄</div>
+        <div class="notif-msg">
+          Your lease for <strong>2BHK Apartment in Adyar</strong> has been confirmed. Move-in: Jan 1, 2025.
+          <div class="notif-time">Jan 1, 2025 · System</div>
+        </div>
+      </div>
+      <div class="notif-item" id="n6">
+        <div class="notif-icon-wrap notif-icon-green">📋</div>
+        <div class="notif-msg">
+          <strong>Booking confirmed!</strong> Your booking for 2BHK Apartment in Adyar has been confirmed by Arjun Sharma.
+          <div class="notif-time">Jan 1, 2025 · Trigger: after_booking_insert</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Section switcher
+  function showSection(name) {
+    document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+    document.getElementById(`section-${name}`).style.display = '';
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const map = { overview:0, bookings:1, leases:2, matches:3, notifications:5 };
+    const items = document.querySelectorAll('.nav-item');
+    if (map[name] !== undefined) items[map[name]].classList.add('active');
+  }
+
+  // Mark all notifications as read
+  function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(n => n.classList.remove('unread'));
+    document.querySelectorAll('.unread-dot').forEach(d => d.style.display = 'none');
+    document.querySelector('.notif-dot').style.display = 'none';
+    document.querySelectorAll('.nav-badge').forEach(b => b.style.display = 'none');
+  }
+
+  // Accept/decline match buttons
+  document.querySelectorAll('.mini-btn-green').forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (this.textContent.includes('Accept')) {
+        this.textContent = '✅ Accepted';
+        this.style.background = 'var(--green)';
+        this.style.color = 'white';
+        // In real app: POST /flatmates/accept → UPDATE FLATMATE_MATCH SET status='accepted'
+      }
+    });
+  });
+</script>
+</body>
+</html>

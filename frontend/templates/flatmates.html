@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — Find a Flatmate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 2.5rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-logo-icon{width:36px;height:36px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .nav-logo-text{font-family:var(--serif);font-size:1.4rem;color:var(--navy);font-weight:700}
+    .nav-logo-text span{color:var(--green)}
+    .nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+    .nav-links a{padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;color:var(--text-muted);transition:all .18s}
+    .nav-links a:hover,.nav-links a.active{color:var(--navy);background:var(--bg)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.3rem;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+    .btn-ghost{background:transparent;color:var(--text-muted)}
+    .btn-ghost:hover{color:var(--navy)}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+    .btn-outline:hover{border-color:var(--navy);background:var(--navy-light)}
+    .btn-navy{background:var(--navy);color:white}
+    .btn-navy:hover{background:var(--navy-mid);transform:translateY(-1px)}
+    .btn-green{background:var(--green);color:white}
+    .btn-green:hover{background:var(--green-dark);transform:translateY(-1px)}
+
+    /* PAGE HEADER */
+    .page-header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green) 100%);padding:3.5rem 2.5rem;color:white;text-align:center}
+    .page-header-inner{max-width:720px;margin:0 auto}
+    .page-header-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:.3rem .9rem;border-radius:99px;font-size:.78rem;font-weight:500;margin-bottom:1.25rem}
+    .page-header h1{font-family:var(--serif);font-size:2.4rem;margin-bottom:.75rem}
+    .page-header p{color:rgba(255,255,255,.75);font-size:.95rem;max-width:500px;margin:0 auto 2rem}
+
+    /* HOW SCORE WORKS */
+    .score-breakdown{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+    .score-item{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-md);padding:.75rem 1.25rem;text-align:center;min-width:120px}
+    .score-item-val{font-family:var(--serif);font-size:1.4rem;font-weight:700;margin-bottom:2px}
+    .score-item-lbl{font-size:.72rem;opacity:.8}
+
+    /* FILTER BAR */
+    .filter-bar{background:white;border-bottom:1px solid var(--border);padding:1rem 2.5rem;position:sticky;top:68px;z-index:100;box-shadow:var(--shadow-sm)}
+    .filter-bar-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+    .filter-search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.5rem 1rem}
+    .filter-search:focus-within{border-color:var(--navy)}
+    .filter-search input{border:none;outline:none;font-family:var(--sans);font-size:.875rem;background:transparent;width:100%}
+    .filter-select{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.5rem 1rem;font-family:var(--sans);font-size:.85rem;color:var(--text);background:white;cursor:pointer;outline:none}
+    .filter-pill{padding:.4rem 1rem;border-radius:99px;font-size:.8rem;font-weight:500;cursor:pointer;border:1.5px solid var(--border);color:var(--text-muted);transition:all .18s;background:white}
+    .filter-pill.active,.filter-pill:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+    .results-info{font-size:.85rem;color:var(--text-muted);margin-left:auto;white-space:nowrap}
+
+    /* MAIN LAYOUT */
+    .page-body{max-width:1280px;margin:2rem auto;padding:0 2.5rem}
+
+    /* FLATMATE CARDS GRID */
+    .flatmates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+
+    /* FLATMATE CARD */
+    .flatmate-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:all .25s}
+    .flatmate-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+    .flatmate-card.hidden{display:none}
+
+    /* Score header */
+    .card-score-header{padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    .score-ring-wrap{display:flex;align-items:center;gap:.75rem}
+    .score-ring{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;color:white;flex-shrink:0}
+    .score-high{background:conic-gradient(var(--green) calc(var(--pct)*3.6deg),#E5E7EB 0deg);position:relative}
+    .score-high::after{content:'';position:absolute;width:38px;height:38px;border-radius:50%;background:var(--green)}
+    .score-mid{background:conic-gradient(var(--amber) calc(var(--pct)*3.6deg),#E5E7EB 0deg);position:relative}
+    .score-mid::after{content:'';position:absolute;width:38px;height:38px;border-radius:50%;background:var(--amber)}
+    .score-inner{position:relative;z-index:1;font-size:.8rem;font-weight:700;color:white}
+    .score-label-text{font-size:.8rem;color:var(--text-muted)}
+    .score-label-val{font-weight:700;font-size:.95rem;color:var(--navy)}
+    .match-status{font-size:.72rem;font-weight:600;padding:.2rem .65rem;border-radius:99px}
+    .status-accepted{background:var(--green-light);color:var(--green-dark)}
+    .status-pending{background:#FEF3DC;color:#92400E}
+    .status-declined{background:#FEE2E2;color:#991B1B}
+
+    /* Profile section */
+    .card-profile{padding:0 1.5rem 1.25rem;display:flex;align-items:center;gap:1rem}
+    .profile-avatar{width:60px;height:60px;border-radius:50%;overflow:hidden;flex-shrink:0;border:3px solid var(--border)}
+    .profile-avatar img{width:100%;height:100%;object-fit:cover}
+    .profile-info{}
+    .profile-name{font-weight:700;font-size:1.05rem;color:var(--navy);margin-bottom:2px}
+    .profile-sub{font-size:.8rem;color:var(--text-muted)}
+    .profile-rating{font-size:.78rem;color:var(--amber);margin-top:2px}
+
+    /* Preference tags */
+    .card-prefs{padding:0 1.5rem 1.25rem;display:flex;flex-wrap:wrap;gap:.4rem}
+    .pref-tag{font-size:.72rem;font-weight:500;padding:.22rem .65rem;border-radius:99px;border:1px solid var(--border);background:var(--bg);color:var(--text-muted)}
+    .pref-match{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+
+    /* Score bar breakdown */
+    .card-score-bars{padding:0 1.5rem 1.25rem}
+    .score-bar-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}
+    .score-bar-label{font-size:.72rem;color:var(--text-muted);width:80px;flex-shrink:0}
+    .score-bar-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+    .score-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
+    .fill-green{background:var(--green)}
+    .fill-amber{background:var(--amber)}
+    .fill-red{background:#EF4444}
+    .score-bar-val{font-size:.72rem;font-weight:600;color:var(--navy);width:28px;text-align:right;flex-shrink:0}
+
+    /* Card footer */
+    .card-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.6rem}
+    .card-footer .btn{flex:1;justify-content:center;padding:.55rem;font-size:.82rem}
+
+    /* Budget display */
+    .budget-display{padding:0 1.5rem .75rem;font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+    .budget-val{font-weight:600;color:var(--navy)}
+
+    /* NO RESULTS */
+    .no-results{text-align:center;padding:4rem 2rem;color:var(--text-muted);display:none}
+    .no-results.show{display:block}
+
+    /* CONNECT MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal{background:white;border-radius:var(--radius-lg);padding:2.5rem;max-width:440px;width:90%;text-align:center;box-shadow:var(--shadow-lg)}
+    .modal-avatar{width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto 1rem;border:3px solid var(--green)}
+    .modal-avatar img{width:100%;height:100%;object-fit:cover}
+    .modal h3{font-family:var(--serif);font-size:1.4rem;color:var(--navy);margin-bottom:.5rem}
+    .modal p{font-size:.9rem;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.7}
+    .modal-score{display:inline-flex;align-items:center;gap:.5rem;background:var(--green-light);color:var(--green-dark);padding:.4rem 1rem;border-radius:99px;font-weight:700;font-size:.9rem;margin-bottom:1.25rem}
+    .modal-actions{display:flex;gap:.75rem;justify-content:center}
+
+    /* FOOTER */
+    .footer{background:var(--navy);padding:3rem 2.5rem 2rem;margin-top:4rem}
+    .footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .footer-logo{font-family:var(--serif);font-size:1.3rem;color:white;font-weight:700}
+    .footer-logo span{color:#6EE7B7}
+    .footer-links{display:flex;gap:2rem}
+    .footer-links a{font-size:.85rem;color:rgba(255,255,255,.45);transition:color .18s}
+    .footer-links a:hover{color:white}
+    .footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🏠</div>
+      <div class="nav-logo-text">Rent<span>Mate</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="properties.html">Properties</a></li>
+      <li><a href="flatmates.html" class="active">Find Flatmate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-ghost">Login</a>
+      <a href="auth.html" class="btn btn-green">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-header-pill">🤝 Smart Compatibility Matching</div>
+    <h1>Find Your Perfect Flatmate</h1>
+    <p>Our algorithm compares sleep schedules, diet, and budgets to give every pair a score out of 100. No more guessing.</p>
+    <div class="score-breakdown">
+      <div class="score-item">
+        <div class="score-item-val">35 pts</div>
+        <div class="score-item-lbl">Sleep Schedule</div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-val">35 pts</div>
+        <div class="score-item-lbl">Diet Preference</div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-val">30 pts</div>
+        <div class="score-item-lbl">Budget Overlap</div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-val">100 pts</div>
+        <div class="score-item-lbl">Total Score</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+    <div class="filter-search">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search by name or city..." oninput="applyFilters()" />
+    </div>
+    <select class="filter-select" id="cityFilter" onchange="applyFilters()">
+      <option value="">All Cities</option>
+      <option value="Chennai">Chennai</option>
+      <option value="Bangalore">Bangalore</option>
+    </select>
+    <select class="filter-select" id="dietFilter" onchange="applyFilters()">
+      <option value="">Any Diet</option>
+      <option value="veg">Vegetarian</option>
+      <option value="non_veg">Non-Vegetarian</option>
+      <option value="any">No Preference</option>
+    </select>
+    <select class="filter-select" id="sleepFilter" onchange="applyFilters()">
+      <option value="">Any Schedule</option>
+      <option value="early_bird">Early Bird</option>
+      <option value="night_owl">Night Owl</option>
+      <option value="flexible">Flexible</option>
+    </select>
+    <button class="filter-pill active" onclick="filterByScore(this, 0)">All</button>
+    <button class="filter-pill" onclick="filterByScore(this, 80)">80+ Score</button>
+    <button class="filter-pill" onclick="filterByScore(this, 65)">65+ Score</button>
+    <span class="results-info" id="resultsInfo">Showing 6 matches</span>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+  <div class="flatmates-grid" id="flatmatesGrid">
+
+    <!-- MATCH 1: Priya & Sneha — 88.5 -->
+    <div class="flatmate-card" data-score="88" data-city="Chennai" data-diet="veg" data-sleep="early_bird" data-name="sneha iyer">
+      <div class="card-score-header">
+        <div class="score-ring-wrap">
+          <div class="score-ring score-high" style="--pct:88">
+            <span class="score-inner">88</span>
+          </div>
+          <div>
+            <div class="score-label-val">Great Match!</div>
+            <div class="score-label-text">Compatibility Score</div>
+          </div>
+        </div>
+        <span class="match-status status-accepted">✅ Accepted</span>
+      </div>
+      <div class="card-profile">
+        <div class="profile-avatar">
+          <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80" alt="Sneha" />
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Sneha Iyer</div>
+          <div class="profile-sub">2nd Year CS · Chennai</div>
+          <div class="profile-rating">⭐ 4.0 reputation</div>
+        </div>
+      </div>
+      <div class="budget-display">
+        💰 Budget: <span class="budget-val">₹6,000 – ₹10,000/mo</span>
+      </div>
+      <div class="card-prefs">
+        <span class="pref-tag pref-match">🌅 Early Bird</span>
+        <span class="pref-tag pref-match">🥗 Vegetarian</span>
+        <span class="pref-tag">📚 Morning Study</span>
+        <span class="pref-tag pref-match">📍 Chennai</span>
+      </div>
+      <div class="card-score-bars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Sleep</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Diet</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Budget</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:60%"></div></div>
+          <span class="score-bar-val">18</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline" onclick="openModal('Sneha Iyer','88','https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80')">View Profile</button>
+        <button class="btn btn-green" onclick="openModal('Sneha Iyer','88','https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80')">Connect 🤝</button>
+      </div>
+    </div>
+
+    <!-- MATCH 2: Divya & Ananya — 78.5 -->
+    <div class="flatmate-card" data-score="78" data-city="Bangalore" data-diet="any" data-sleep="flexible" data-name="divya nair">
+      <div class="card-score-header">
+        <div class="score-ring-wrap">
+          <div class="score-ring score-high" style="--pct:78">
+            <span class="score-inner">78</span>
+          </div>
+          <div>
+            <div class="score-label-val">Good Match</div>
+            <div class="score-label-text">Compatibility Score</div>
+          </div>
+        </div>
+        <span class="match-status status-accepted">✅ Accepted</span>
+      </div>
+      <div class="card-profile">
+        <div class="profile-avatar">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&q=80" alt="Divya" />
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Divya Nair</div>
+          <div class="profile-sub">Working Professional · Bangalore</div>
+          <div class="profile-rating">⭐ 3.5 reputation</div>
+        </div>
+      </div>
+      <div class="budget-display">
+        💰 Budget: <span class="budget-val">₹8,000 – ₹14,000/mo</span>
+      </div>
+      <div class="card-prefs">
+        <span class="pref-tag pref-match">🔄 Flexible</span>
+        <span class="pref-tag">🍽️ No Preference</span>
+        <span class="pref-tag">📚 Morning</span>
+        <span class="pref-tag pref-match">📍 Bangalore</span>
+      </div>
+      <div class="card-score-bars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Sleep</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:57%"></div></div>
+          <span class="score-bar-val">20</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Diet</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:57%"></div></div>
+          <span class="score-bar-val">20</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Budget</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">30</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline" onclick="openModal('Divya Nair','78','https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&q=80')">View Profile</button>
+        <button class="btn btn-green" onclick="openModal('Divya Nair','78','https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&q=80')">Connect 🤝</button>
+      </div>
+    </div>
+
+    <!-- MATCH 3: Meera & Ananya — 80 -->
+    <div class="flatmate-card" data-score="80" data-city="Chennai" data-diet="veg" data-sleep="night_owl" data-name="meera pillai">
+      <div class="card-score-header">
+        <div class="score-ring-wrap">
+          <div class="score-ring score-high" style="--pct:80">
+            <span class="score-inner">80</span>
+          </div>
+          <div>
+            <div class="score-label-val">Good Match</div>
+            <div class="score-label-text">Compatibility Score</div>
+          </div>
+        </div>
+        <span class="match-status status-pending">⏳ Pending</span>
+      </div>
+      <div class="card-profile">
+        <div class="profile-avatar">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&q=80" alt="Meera" />
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Meera Pillai</div>
+          <div class="profile-sub">Working Professional · Chennai</div>
+          <div class="profile-rating">⭐ 4.3 reputation</div>
+        </div>
+      </div>
+      <div class="budget-display">
+        💰 Budget: <span class="budget-val">₹9,000 – ₹16,000/mo</span>
+      </div>
+      <div class="card-prefs">
+        <span class="pref-tag">🌙 Night Owl</span>
+        <span class="pref-tag pref-match">🥗 Vegetarian</span>
+        <span class="pref-tag">📚 Night Study</span>
+        <span class="pref-tag">📍 Chennai</span>
+      </div>
+      <div class="card-score-bars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Sleep</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Diet</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Budget</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-amber" style="width:33%"></div></div>
+          <span class="score-bar-val">10</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline" onclick="openModal('Meera Pillai','80','https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&q=80')">View Profile</button>
+        <button class="btn btn-green" onclick="openModal('Meera Pillai','80','https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&q=80')">Connect 🤝</button>
+      </div>
+    </div>
+
+    <!-- MATCH 4: Priya & Meera — 72 -->
+    <div class="flatmate-card" data-score="72" data-city="Chennai" data-diet="veg" data-sleep="early_bird" data-name="priya menon">
+      <div class="card-score-header">
+        <div class="score-ring-wrap">
+          <div class="score-ring score-mid" style="--pct:72">
+            <span class="score-inner">72</span>
+          </div>
+          <div>
+            <div class="score-label-val">Decent Match</div>
+            <div class="score-label-text">Compatibility Score</div>
+          </div>
+        </div>
+        <span class="match-status status-pending">⏳ Pending</span>
+      </div>
+      <div class="card-profile">
+        <div class="profile-avatar">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" alt="Priya" />
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Priya Menon</div>
+          <div class="profile-sub">Working Professional · Chennai</div>
+          <div class="profile-rating">⭐ 4.2 reputation</div>
+        </div>
+      </div>
+      <div class="budget-display">
+        💰 Budget: <span class="budget-val">₹7,000 – ₹12,000/mo</span>
+      </div>
+      <div class="card-prefs">
+        <span class="pref-tag">🌅 Early Bird</span>
+        <span class="pref-tag pref-match">🥗 Vegetarian</span>
+        <span class="pref-tag">📚 Morning</span>
+        <span class="pref-tag pref-match">📍 Chennai</span>
+      </div>
+      <div class="card-score-bars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Sleep</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-amber" style="width:57%"></div></div>
+          <span class="score-bar-val">20</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Diet</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Budget</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:57%"></div></div>
+          <span class="score-bar-val">17</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline" onclick="openModal('Priya Menon','72','https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80')">View Profile</button>
+        <button class="btn btn-green" onclick="openModal('Priya Menon','72','https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80')">Connect 🤝</button>
+      </div>
+    </div>
+
+    <!-- MATCH 5: Rahul & Amit — 65 -->
+    <div class="flatmate-card" data-score="65" data-city="Bangalore" data-diet="non_veg" data-sleep="night_owl" data-name="rahul verma">
+      <div class="card-score-header">
+        <div class="score-ring-wrap">
+          <div class="score-ring score-mid" style="--pct:65">
+            <span class="score-inner">65</span>
+          </div>
+          <div>
+            <div class="score-label-val">Possible Match</div>
+            <div class="score-label-text">Compatibility Score</div>
+          </div>
+        </div>
+        <span class="match-status status-pending">⏳ Pending</span>
+      </div>
+      <div class="card-profile">
+        <div class="profile-avatar">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" alt="Rahul" />
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Rahul Verma</div>
+          <div class="profile-sub">Working Professional · Bangalore</div>
+          <div class="profile-rating">⭐ 3.8 reputation</div>
+        </div>
+      </div>
+      <div class="budget-display">
+        💰 Budget: <span class="budget-val">₹10,000 – ₹18,000/mo</span>
+      </div>
+      <div class="card-prefs">
+        <span class="pref-tag">🌙 Night Owl</span>
+        <span class="pref-tag">🍖 Non-Veg</span>
+        <span class="pref-tag">📚 Night</span>
+        <span class="pref-tag">📍 Bangalore</span>
+      </div>
+      <div class="card-score-bars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Sleep</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Diet</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-amber" style="width:57%"></div></div>
+          <span class="score-bar-val">20</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Budget</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-amber" style="width:33%"></div></div>
+          <span class="score-bar-val">10</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline" onclick="openModal('Rahul Verma','65','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80')">View Profile</button>
+        <button class="btn btn-navy" onclick="openModal('Rahul Verma','65','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80')">Connect 🤝</button>
+      </div>
+    </div>
+
+    <!-- MATCH 6: Sneha & Meera — 55 -->
+    <div class="flatmate-card" data-score="55" data-city="Chennai" data-diet="veg" data-sleep="early_bird" data-name="ananya krishnan">
+      <div class="card-score-header">
+        <div class="score-ring-wrap">
+          <div class="score-ring score-mid" style="--pct:55">
+            <span class="score-inner">55</span>
+          </div>
+          <div>
+            <div class="score-label-val">Low Match</div>
+            <div class="score-label-text">Compatibility Score</div>
+          </div>
+        </div>
+        <span class="match-status status-declined">❌ Declined</span>
+      </div>
+      <div class="card-profile">
+        <div class="profile-avatar">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" alt="Ananya" />
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Ananya Krishnan</div>
+          <div class="profile-sub">Working Professional · Bangalore</div>
+          <div class="profile-rating">⭐ 4.6 reputation</div>
+        </div>
+      </div>
+      <div class="budget-display">
+        💰 Budget: <span class="budget-val">₹11,000 – ₹20,000/mo</span>
+      </div>
+      <div class="card-prefs">
+        <span class="pref-tag">🌅 Early Bird</span>
+        <span class="pref-tag pref-match">🥗 Vegetarian</span>
+        <span class="pref-tag">📚 Morning</span>
+        <span class="pref-tag">📍 Bangalore</span>
+      </div>
+      <div class="card-score-bars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Sleep</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Diet</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:100%"></div></div>
+          <span class="score-bar-val">35</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Budget</span>
+          <div class="score-bar-track"><div class="score-bar-fill fill-red" style="width:0%"></div></div>
+          <span class="score-bar-val">0</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline" onclick="openModal('Ananya Krishnan','55','https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80')">View Profile</button>
+        <button class="btn btn-navy" onclick="openModal('Ananya Krishnan','55','https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80')">Connect 🤝</button>
+      </div>
+    </div>
+
+    <div class="no-results" id="noResults">
+      <div style="font-size:3rem;margin-bottom:1rem">🤷</div>
+      <h3 style="color:var(--navy);margin-bottom:.5rem">No matches found</h3>
+      <p>Try adjusting your filters to see more profiles.</p>
+      <button class="btn btn-outline" style="margin-top:1rem" onclick="resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONNECT MODAL -->
+<div class="modal-overlay" id="connectModal">
+  <div class="modal">
+    <div class="modal-avatar">
+      <img id="modalAvatar" src="" alt="Profile" />
+    </div>
+    <h3>Connect with <span id="modalName"></span>?</h3>
+    <div class="modal-score">🤝 <span id="modalScore"></span>/100 Compatibility</div>
+    <p>Sending a connection request will notify <span id="modalName2"></span> and create a match record in the database. You'll both receive a notification instantly.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-green" onclick="confirmConnect()">Send Request ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">🏠 Rent<span>Mate</span></div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="properties.html">Properties</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="auth.html">Login</a>
+    </div>
+    <div class="footer-copy">© 2025 RentMate · DBMS Assignment</div>
+  </div>
+</footer>
+
+<script>
+  let minScoreFilter = 0;
+
+  function applyFilters() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const city   = document.getElementById('cityFilter').value;
+    const diet   = document.getElementById('dietFilter').value;
+    const sleep  = document.getElementById('sleepFilter').value;
+
+    let count = 0;
+    document.querySelectorAll('.flatmate-card').forEach(card => {
+      const name      = card.dataset.name;
+      const cardCity  = card.dataset.city;
+      const cardDiet  = card.dataset.diet;
+      const cardSleep = card.dataset.sleep;
+      const score     = parseInt(card.dataset.score);
+
+      let show = true;
+      if (search && !name.includes(search)) show = false;
+      if (city   && cardCity  !== city)   show = false;
+      if (diet   && cardDiet  !== diet)   show = false;
+      if (sleep  && cardSleep !== sleep)  show = false;
+      if (score < minScoreFilter)         show = false;
+
+      card.style.display = show ? '' : 'none';
+      if (show) count++;
+    });
+
+    document.getElementById('resultsInfo').textContent = `Showing ${count} match${count !== 1 ? 'es' : ''}`;
+    document.getElementById('noResults').classList.toggle('show', count === 0);
+  }
+
+  function filterByScore(btn, min) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    minScoreFilter = min;
+    applyFilters();
+  }
+
+  function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('cityFilter').value = '';
+    document.getElementById('dietFilter').value = '';
+    document.getElementById('sleepFilter').value = '';
+    minScoreFilter = 0;
+    document.querySelectorAll('.filter-pill').forEach((p,i) => p.classList.toggle('active', i === 0));
+    applyFilters();
+  }
+
+  function openModal(name, score, avatar) {
+    document.getElementById('modalName').textContent  = name;
+    document.getElementById('modalName2').textContent = name;
+    document.getElementById('modalScore').textContent = score;
+    document.getElementById('modalAvatar').src        = avatar;
+    document.getElementById('connectModal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('connectModal').classList.remove('show');
+  }
+
+  function confirmConnect() {
+    closeModal();
+    // In real app: POST /flatmates/connect → inserts into FLATMATE_MATCH
+    // → triggers after_match_insert → both users get notifications
+    alert('Connection request sent! Both users have been notified via the database trigger.');
+  }
+
+  document.getElementById('connectModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity=1; e.target.style.transform='translateY(0)'; }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.flatmate-card').forEach(el => {
+    el.style.opacity=0; el.style.transform='translateY(20px)';
+    el.style.transition='opacity .4s ease,transform .4s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

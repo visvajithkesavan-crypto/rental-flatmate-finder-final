@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — Find Your Home & Flatmate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --shadow-xl:0 24px 60px rgba(0,0,0,0.18);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;--radius-xl:28px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.07);box-shadow:0 2px 16px rgba(0,0,0,0.06)}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 2.5rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-logo-icon{width:36px;height:36px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .nav-logo-text{font-family:var(--serif);font-size:1.4rem;color:var(--navy);font-weight:700}
+    .nav-logo-text span{color:var(--green)}
+    .nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+    .nav-links a{padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;color:var(--text-muted);transition:all .18s}
+    .nav-links a:hover,.nav-links a.active{color:var(--navy);background:var(--bg)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.3rem;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+    .btn-ghost{background:transparent;color:var(--text-muted)}
+    .btn-ghost:hover{color:var(--navy)}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+    .btn-outline:hover{border-color:var(--navy);background:var(--navy-light)}
+    .btn-navy{background:var(--navy);color:white;box-shadow:0 2px 8px rgba(15,36,68,.25)}
+    .btn-navy:hover{background:var(--navy-mid);transform:translateY(-1px)}
+    .btn-green{background:var(--green);color:white;box-shadow:0 2px 8px rgba(0,168,107,.3)}
+    .btn-green:hover{background:var(--green-dark);transform:translateY(-1px)}
+    .btn-lg{padding:.85rem 2rem;font-size:1rem;border-radius:var(--radius-md)}
+    .btn-xl{padding:1rem 2.5rem;font-size:1.05rem;border-radius:var(--radius-md)}
+
+    /* HERO */
+    .hero{min-height:100vh;background:linear-gradient(160deg,#0A1628 0%,#0F2444 45%,#162E52 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:8rem 2.5rem 4rem}
+    .hero-bg-grid{position:absolute;inset:0;opacity:.07;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:60px 60px}
+    .hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(0,168,107,.15) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
+    .hero-glow-2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.1) 0%,transparent 70%);bottom:0;left:200px;pointer-events:none}
+    .hero-inner{max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;z-index:1}
+    .hero-left{color:white}
+    .hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.35rem 1rem;border-radius:99px;font-size:.78rem;font-weight:500;color:rgba(255,255,255,.8);margin-bottom:1.75rem;letter-spacing:.03em}
+    .hero-pill-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+    .hero-title{font-family:var(--serif);font-size:clamp(2.6rem,4vw,3.8rem);line-height:1.12;margin-bottom:1.5rem;font-weight:700;letter-spacing:-.02em}
+    .hero-title em{font-style:italic;color:#6EE7B7}
+    .hero-desc{font-size:1.05rem;color:rgba(255,255,255,.65);max-width:480px;margin-bottom:2.5rem;line-height:1.75}
+    .hero-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-bottom:3rem}
+    .hero-trust{display:flex;align-items:center;gap:1.5rem}
+    .trust-item{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.55);font-size:.8rem}
+    .trust-item span{font-weight:600;color:rgba(255,255,255,.85)}
+
+    /* HERO CARD STACK */
+    .hero-right{position:relative}
+    .hero-card-stack{position:relative;height:480px}
+    .hero-card{position:absolute;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl);transition:transform .3s ease}
+    .hero-card:nth-child(1){width:340px;height:400px;top:0;right:0;z-index:3}
+    .hero-card:nth-child(2){width:280px;height:320px;top:60px;right:280px;z-index:2;transform:rotate(-4deg)}
+    .hero-card:nth-child(3){width:240px;height:280px;top:20px;right:220px;z-index:1;transform:rotate(3deg);opacity:.7}
+    .hero-card:hover{transform:translateY(-8px) rotate(0deg) !important;z-index:10 !important}
+    .hero-card img{width:100%;height:75%;object-fit:cover;display:block}
+    .hero-card-info{padding:.9rem 1rem;background:white}
+    .hero-card-price{font-weight:700;font-size:1.05rem;color:var(--navy)}
+    .hero-card-loc{font-size:.78rem;color:var(--text-muted);margin-top:2px}
+    .hero-match-badge{position:absolute;bottom:-20px;right:20px;z-index:20;background:white;border-radius:var(--radius-md);padding:.75rem 1rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;min-width:200px}
+    .match-score-ring{width:44px;height:44px;border-radius:50%;background:conic-gradient(var(--green) 318deg,#E5E7EB 318deg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .match-score-inner{width:34px;height:34px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--navy)}
+    .match-badge-label{font-size:.7rem;color:var(--text-muted)}
+    .match-badge-val{font-size:.85rem;font-weight:600;color:var(--navy)}
+
+    /* SEARCH */
+    .search-wrap{padding:0 2.5rem;position:relative;z-index:10;max-width:1280px;margin:-3rem auto 0}
+    .search-section{background:white;border-radius:var(--radius-xl);padding:2.5rem;box-shadow:var(--shadow-xl)}
+    .search-tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:2px solid var(--border)}
+    .search-tab{padding:.6rem 1.5rem;font-size:.9rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;gap:6px}
+    .search-tab.active{color:var(--navy);border-bottom-color:var(--navy)}
+    .search-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:stretch;border:1.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+    .search-field{display:flex;flex-direction:column;padding:.75rem 1.25rem;border-right:1px solid var(--border)}
+    .sf-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px}
+    .search-field input,.search-field select{border:none;outline:none;font-family:var(--sans);font-size:.95rem;color:var(--text);background:transparent;font-weight:500}
+    .search-btn-wrap{padding:.5rem;display:flex;align-items:center}
+
+    /* STATS */
+    .stats-strip{max-width:1280px;margin:3rem auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;padding:0 2.5rem}
+    .stat-card{background:white;border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow-sm)}
+    .stat-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+    .stat-num{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--navy);line-height:1}
+    .stat-lbl{font-size:.78rem;color:var(--text-muted);margin-top:3px;font-weight:500}
+
+    /* SECTIONS */
+    .section{padding:5rem 2.5rem}
+    .section-inner{max-width:1280px;margin:0 auto}
+    .section-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:.75rem}
+    .section-eyebrow::before{content:'';width:20px;height:2px;background:var(--green);border-radius:1px}
+    .section-title{font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.6rem);color:var(--navy);line-height:1.2;margin-bottom:.75rem}
+    .section-sub{font-size:1rem;color:var(--text-muted);max-width:500px}
+
+    /* PROPERTY CARDS */
+    .props-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem}
+    .props-filters{display:flex;gap:.5rem}
+    .filter-pill{padding:.4rem 1rem;border-radius:99px;font-size:.8rem;font-weight:500;cursor:pointer;border:1.5px solid var(--border);color:var(--text-muted);transition:all .18s;background:white}
+    .filter-pill.active,.filter-pill:hover{border-color:var(--navy);color:var(--navy);background:var(--navy-light)}
+    .props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem}
+    .prop-card{background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:all .25s;cursor:pointer}
+    .prop-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-6px)}
+    .prop-img-wrap{position:relative;height:220px;overflow:hidden}
+    .prop-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .prop-card:hover .prop-img-wrap img{transform:scale(1.06)}
+    .prop-status{position:absolute;top:14px;left:14px;padding:.28rem .75rem;border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+    .status-available{background:var(--green);color:white}
+    .prop-type{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);color:white;padding:.25rem .65rem;border-radius:99px;font-size:.68rem;font-weight:600;text-transform:capitalize;backdrop-filter:blur(4px)}
+    .prop-save{position:absolute;bottom:14px;right:14px;width:34px;height:34px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:var(--shadow-md);cursor:pointer;transition:transform .2s}
+    .prop-save:hover{transform:scale(1.15)}
+    .prop-body{padding:1.4rem}
+    .prop-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:.35rem}
+    .prop-price{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--navy)}
+    .prop-price-unit{font-size:.8rem;color:var(--text-muted)}
+    .prop-name{font-weight:600;font-size:1rem;color:var(--text);margin-bottom:.3rem}
+    .prop-loc{font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:4px;margin-bottom:1rem}
+    .prop-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.25rem}
+    .prop-tag{font-size:.7rem;font-weight:500;background:var(--bg);color:var(--text-muted);border:1px solid var(--border);padding:.2rem .65rem;border-radius:99px}
+    .prop-footer{display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border)}
+    .prop-landlord{display:flex;align-items:center;gap:6px}
+    .landlord-avatar{width:28px;height:28px;border-radius:50%;background:var(--navy-light);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--navy)}
+    .landlord-name{font-size:.78rem;font-weight:600;color:var(--text)}
+    .landlord-rating{font-size:.7rem;color:var(--amber)}
+
+    /* HOW IT WORKS */
+    .hiw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;position:relative}
+    .hiw-grid::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--green),var(--navy-mid));z-index:0;border-radius:1px}
+    .hiw-card{text-align:center;position:relative;z-index:1}
+    .hiw-num{width:56px;height:56px;border-radius:50%;background:white;border:3px solid var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:var(--navy);margin:0 auto 1.25rem;box-shadow:var(--shadow-md)}
+    .hiw-icon{font-size:2rem;margin-bottom:.75rem}
+    .hiw-title{font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.5rem}
+    .hiw-desc{font-size:.85rem;color:var(--text-muted);line-height:1.65}
+
+    /* FLATMATE BANNER */
+    .fm-banner{border-radius:var(--radius-xl);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;min-height:420px;box-shadow:var(--shadow-lg)}
+    .fm-left{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);padding:3.5rem;display:flex;flex-direction:column;justify-content:center;color:white}
+    .fm-left .section-eyebrow{color:#86EFAC}.fm-left .section-eyebrow::before{background:#86EFAC}
+    .fm-left .section-title{color:white;margin-bottom:1rem}
+    .fm-left p{color:rgba(255,255,255,.7);font-size:.95rem;margin-bottom:2rem;max-width:380px}
+    .fm-right{position:relative;overflow:hidden}
+    .fm-right img{width:100%;height:100%;object-fit:cover}
+    .fm-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,168,107,.6),rgba(15,36,68,.4));display:flex;align-items:flex-end;padding:2rem}
+    .fm-match-cards{display:flex;gap:.75rem}
+    .fm-match-card{background:rgba(255,255,255,.95);border-radius:var(--radius-md);padding:.9rem 1.1rem;min-width:130px}
+    .fm-avatar{font-size:1.5rem;margin-bottom:.4rem}
+    .fm-name{font-weight:700;font-size:.85rem;color:var(--navy)}
+    .fm-role{font-size:.72rem;color:var(--text-muted);margin-bottom:.5rem}
+    .fm-score-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:4px}
+    .fm-score-fill{height:100%;background:var(--green);border-radius:2px}
+    .fm-score-label{font-size:.7rem;color:var(--green);font-weight:700}
+
+    /* CITIES */
+    .cities-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+    .city-card{border-radius:var(--radius-lg);overflow:hidden;position:relative;height:260px;cursor:pointer}
+    .city-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .city-card:hover img{transform:scale(1.06)}
+    .city-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,22,40,.85) 0%,rgba(10,22,40,.2) 60%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.75rem;color:white}
+    .city-name{font-family:var(--serif);font-size:1.75rem;font-weight:700;margin-bottom:4px}
+    .city-count{font-size:.85rem;opacity:.8}
+
+    /* TESTIMONIALS */
+    .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .testimonial-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;box-shadow:var(--shadow-sm)}
+    .t-stars{color:var(--amber);font-size:.9rem;margin-bottom:.75rem}
+    .t-text{font-size:.9rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.25rem;font-style:italic}
+    .t-user{display:flex;align-items:center;gap:.75rem}
+    .t-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden}
+    .t-avatar img{width:100%;height:100%;object-fit:cover}
+    .t-name{font-weight:700;font-size:.875rem;color:var(--navy)}
+    .t-role{font-size:.75rem;color:var(--text-light)}
+
+    /* FOOTER */
+    .footer{background:var(--navy);padding:4rem 2.5rem 2rem}
+    .footer-inner{max-width:1280px;margin:0 auto}
+    .footer-top{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:2rem}
+    .footer-logo{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:700;margin-bottom:.75rem}
+    .footer-logo span{color:#6EE7B7}
+    .footer-desc{font-size:.85rem;color:rgba(255,255,255,.45);line-height:1.8;max-width:280px}
+    .footer-col h5{color:white;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem}
+    .footer-col ul{list-style:none}
+    .footer-col li{margin-bottom:.6rem}
+    .footer-col a{font-size:.85rem;color:rgba(255,255,255,.45);transition:color .18s}
+    .footer-col a:hover{color:white}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:rgba(255,255,255,.3)}
+    .footer-bottom a{color:#6EE7B7}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{animation:fadeUp .7s cubic-bezier(.22,.68,0,1.2) both}
+    .d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}.d5{animation-delay:.45s}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🏠</div>
+      <div class="nav-logo-text">Rent<span>Mate</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="properties.html">Properties</a></li>
+      <li><a href="flatmates.html">Find Flatmate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-ghost">Login</a>
+      <a href="auth.html" class="btn btn-green">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-pill fade-up d1"><div class="hero-pill-dot"></div>Hyperlocal · Chennai & Bangalore</div>
+      <h1 class="hero-title fade-up d2">Find your perfect<br/>home <em>and</em><br/>ideal flatmate</h1>
+      <p class="hero-desc fade-up d3">The only platform that combines property search with smart flatmate matching — powered by a compatibility engine that scores lifestyle, budget, and habits out of 100.</p>
+      <div class="hero-actions fade-up d4">
+        <a href="properties.html" class="btn btn-green btn-xl">Browse Properties</a>
+        <a href="flatmates.html" class="btn btn-xl" style="background:rgba(255,255,255,.1);color:white;border:1.5px solid rgba(255,255,255,.2)">Find Flatmate</a>
+      </div>
+      <div class="hero-trust fade-up d5">
+        <div class="trust-item">✅ <span>8+</span> Properties</div>
+        <div class="trust-item">🤝 <span>6</span> Active matches</div>
+        <div class="trust-item">⭐ <span>4.5</span> Avg rating</div>
+      </div>
+    </div>
+    <div class="hero-right fade-up d3">
+      <div class="hero-card-stack">
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80" alt="Apartment" loading="lazy"/>
+          <div class="hero-card-info"><div class="hero-card-price">₹22,000/mo</div><div class="hero-card-loc">📍 Koramangala, Bangalore</div></div>
+        </div>
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80" alt="Apartment" loading="lazy"/>
+          <div class="hero-card-info"><div class="hero-card-price">₹18,000/mo</div><div class="hero-card-loc">📍 Adyar, Chennai</div></div>
+        </div>
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80" alt="Studio" loading="lazy"/>
+          <div class="hero-card-info"><div class="hero-card-price">₹9,500/mo</div><div class="hero-card-loc">📍 Anna Nagar, Chennai</div></div>
+        </div>
+        <div class="hero-match-badge">
+          <div class="match-score-ring"><div class="match-score-inner">88</div></div>
+          <div><div class="match-badge-label">Flatmate match found!</div><div class="match-badge-val">Priya & Sneha — 88/100</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-section">
+    <div class="search-tabs">
+      <button class="search-tab active" onclick="switchTab(this,'prop')">🏠 Find a Property</button>
+      <button class="search-tab" onclick="switchTab(this,'flat')">🤝 Find a Flatmate</button>
+    </div>
+    <div class="search-row">
+      <div class="search-field">
+        <div class="sf-label">Location</div>
+        <input type="text" id="locInput" placeholder="Chennai, Adyar, Koramangala..." />
+      </div>
+      <div class="search-field" style="min-width:160px;">
+        <div class="sf-label">Budget</div>
+        <select id="budgetSel"><option value="">Any Budget</option><option>Under ₹10,000</option><option>₹10k – ₹20k</option><option>₹20k – ₹35k</option><option>Above ₹35k</option></select>
+      </div>
+      <div class="search-field" id="typeField" style="min-width:160px;">
+        <div class="sf-label">Property Type</div>
+        <select><option>Any Type</option><option>Apartment</option><option>House</option><option>PG</option><option>Studio</option></select>
+      </div>
+      <div class="search-btn-wrap"><button class="btn btn-navy" style="padding:.75rem 1.75rem;font-size:.95rem;" onclick="doSearch()">🔍 Search</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-card"><div class="stat-icon" style="background:#EEF2FF;">🏢</div><div><div class="stat-num">8+</div><div class="stat-lbl">Properties Listed</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:var(--green-light);">👥</div><div><div class="stat-num">10</div><div class="stat-lbl">Registered Users</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:#FEF3DC;">🤝</div><div><div class="stat-num">6</div><div class="stat-lbl">Flatmate Matches</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:var(--navy-light);">📍</div><div><div class="stat-num">2</div><div class="stat-lbl">Cities Covered</div></div></div>
+</div>
+
+<!-- FEATURED PROPERTIES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="props-header">
+      <div><div class="section-eyebrow">Available Now</div><h2 class="section-title">Featured Properties</h2></div>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <div class="props-filters">
+          <button class="filter-pill active" onclick="filterProps(this,'all')">All</button>
+          <button class="filter-pill" onclick="filterProps(this,'apartment')">Apartment</button>
+          <button class="filter-pill" onclick="filterProps(this,'studio')">Studio</button>
+          <button class="filter-pill" onclick="filterProps(this,'house')">House</button>
+        </div>
+        <a href="properties.html" class="btn btn-outline">View all →</a>
+      </div>
+    </div>
+    <div class="props-grid">
+
+      <div class="prop-card" data-type="apartment" onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80" alt="2BHK Adyar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span><span class="prop-type">Apartment</span><div class="prop-save">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹18,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">2BHK Apartment in Adyar</div>
+          <div class="prop-loc">📍 Adyar, Chennai &nbsp;·&nbsp; 950 sq.ft</div>
+          <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🚗 Parking</span><span class="prop-tag">🔋 Power Backup</span><span class="prop-tag">🛗 Lift</span></div>
+          <div class="prop-footer">
+            <div class="prop-landlord"><div class="landlord-avatar">AS</div><div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5 · Landlord</div></div></div>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card" data-type="apartment" onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=700&q=80" alt="1BHK Koramangala" loading="lazy"/>
+          <span class="prop-status status-available">Available</span><span class="prop-type">Apartment</span><div class="prop-save">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹22,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">Modern 1BHK in Koramangala</div>
+          <div class="prop-loc">📍 Koramangala, Bangalore &nbsp;·&nbsp; 700 sq.ft</div>
+          <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🏋️ Gym</span><span class="prop-tag">📹 CCTV</span><span class="prop-tag">🛗 Lift</span></div>
+          <div class="prop-footer">
+            <div class="prop-landlord"><div class="landlord-avatar">KP</div><div><div class="landlord-name">Karan Patel</div><div class="landlord-rating">⭐ 4.7 · Landlord</div></div></div>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card" data-type="house" onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&q=80" alt="3BHK T Nagar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span><span class="prop-type">House</span><div class="prop-save">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹35,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">3BHK House in T Nagar</div>
+          <div class="prop-loc">📍 T Nagar, Chennai &nbsp;·&nbsp; 1400 sq.ft</div>
+          <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🚗 Parking</span><span class="prop-tag">🏋️ Gym</span><span class="prop-tag">🏊 Pool</span></div>
+          <div class="prop-footer">
+            <div class="prop-landlord"><div class="landlord-avatar">RV</div><div><div class="landlord-name">Rahul Verma</div><div class="landlord-rating">⭐ 3.8 · Landlord</div></div></div>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card" data-type="studio" onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&q=80" alt="Studio Anna Nagar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span><span class="prop-type">Studio</span><div class="prop-save">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹9,500</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">Spacious Studio near Anna Nagar</div>
+          <div class="prop-loc">📍 Anna Nagar, Chennai &nbsp;·&nbsp; 450 sq.ft</div>
+          <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🫧 Washing Machine</span></div>
+          <div class="prop-footer">
+            <div class="prop-landlord"><div class="landlord-avatar">AS</div><div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5 · Landlord</div></div></div>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card" data-type="studio" onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80" alt="Studio Koramangala" loading="lazy"/>
+          <span class="prop-status status-available">Available</span><span class="prop-type">Studio</span><div class="prop-save">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹11,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">Cozy Studio in Koramangala</div>
+          <div class="prop-loc">📍 Koramangala, Bangalore &nbsp;·&nbsp; 400 sq.ft</div>
+          <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">🫧 Washing Machine</span></div>
+          <div class="prop-footer">
+            <div class="prop-landlord"><div class="landlord-avatar">AM</div><div><div class="landlord-name">Amit Singh</div><div class="landlord-rating">⭐ 4.1 · Landlord</div></div></div>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card" data-type="apartment" onclick="location.href='property_detail.html'">
+        <div class="prop-img-wrap">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=80" alt="2BHK Indiranagar" loading="lazy"/>
+          <span class="prop-status status-available">Available</span><span class="prop-type">Apartment</span><div class="prop-save">🤍</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price-row"><div class="prop-price">₹25,000</div><div class="prop-price-unit">/ month</div></div>
+          <div class="prop-name">2BHK near Indiranagar Metro</div>
+          <div class="prop-loc">📍 Indiranagar, Bangalore &nbsp;·&nbsp; 850 sq.ft</div>
+          <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🚗 Parking</span><span class="prop-tag">🔒 Security</span><span class="prop-tag">🛗 Lift</span></div>
+          <div class="prop-footer">
+            <div class="prop-landlord"><div class="landlord-avatar">RG</div><div><div class="landlord-name">Rohan Gupta</div><div class="landlord-rating">⭐ 3.9 · Landlord</div></div></div>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="background:white;">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <div class="section-eyebrow" style="justify-content:center;">How It Works</div>
+      <h2 class="section-title">From search to move-in</h2>
+      <p class="section-sub" style="margin:0 auto;">Four simple steps to find your perfect home and flatmate.</p>
+    </div>
+    <div class="hiw-grid">
+      <div class="hiw-card"><div class="hiw-num">1</div><div class="hiw-icon">📝</div><div class="hiw-title">Create your profile</div><p class="hiw-desc">Set your budget, lifestyle preferences, sleep schedule, and diet. Our engine uses this to find your best matches.</p></div>
+      <div class="hiw-card"><div class="hiw-num">2</div><div class="hiw-icon">🔍</div><div class="hiw-title">Browse & filter</div><p class="hiw-desc">Search properties by city, price, type, and amenities. View real photos and landlord ratings before deciding.</p></div>
+      <div class="hiw-card"><div class="hiw-num">3</div><div class="hiw-icon">🤝</div><div class="hiw-title">Get matched</div><p class="hiw-desc">Our algorithm gives every user pair a score out of 100. Accept matches and connect with compatible flatmates.</p></div>
+      <div class="hiw-card"><div class="hiw-num">4</div><div class="hiw-icon">🏠</div><div class="hiw-title">Book & move in</div><p class="hiw-desc">Book a property with one click, confirm the lease, and move in. Review your landlord and build your reputation.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FLATMATE BANNER -->
+<section class="section">
+  <div class="section-inner">
+    <div class="fm-banner">
+      <div class="fm-left">
+        <div class="section-eyebrow">Smart Matching</div>
+        <h2 class="section-title">Find your<br/>perfect flatmate</h2>
+        <p>Our compatibility engine compares sleep schedules, diet preferences, and budgets — giving every pair a score out of 100. Stop guessing, start matching.</p>
+        <a href="flatmates.html" class="btn btn-green btn-lg">Find My Match →</a>
+      </div>
+      <div class="fm-right">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" alt="Happy flatmates" loading="lazy"/>
+        <div class="fm-overlay">
+          <div class="fm-match-cards">
+            <div class="fm-match-card"><div class="fm-avatar">👩</div><div class="fm-name">Priya M.</div><div class="fm-role">Early bird · Veg · Chennai</div><div class="fm-score-bar"><div class="fm-score-fill" style="width:88%"></div></div><div class="fm-score-label">88/100 Match</div></div>
+            <div class="fm-match-card"><div class="fm-avatar">👩</div><div class="fm-name">Sneha I.</div><div class="fm-role">Early bird · Veg · Chennai</div><div class="fm-score-bar"><div class="fm-score-fill" style="width:88%"></div></div><div class="fm-score-label">88/100 Match</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CITIES -->
+<section class="section" style="background:white;padding-top:2rem;">
+  <div class="section-inner">
+    <div style="margin-bottom:2.5rem;"><div class="section-eyebrow">Explore Cities</div><h2 class="section-title">Where we operate</h2></div>
+    <div class="cities-grid">
+      <div class="city-card" onclick="location.href='properties.html?city=Chennai'">
+        <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=900&q=80" alt="Chennai" loading="lazy"/>
+        <div class="city-overlay"><div class="city-name">Chennai</div><div class="city-count">5 properties · Adyar, Anna Nagar, T Nagar</div></div>
+      </div>
+      <div class="city-card" onclick="location.href='properties.html?city=Bangalore'">
+        <img src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=900&q=80" alt="Bangalore" loading="lazy"/>
+        <div class="city-overlay"><div class="city-name">Bangalore</div><div class="city-count">3 properties · Koramangala, Indiranagar, Whitefield</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:3rem;"><div class="section-eyebrow" style="justify-content:center;">Reviews</div><h2 class="section-title">What our users say</h2></div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card"><div class="t-stars">★★★★★</div><p class="t-text">"Found my flatmate Sneha through RentMate and we've been living together for 3 months. The compatibility score was spot on — we have the same routine and never fight!"</p><div class="t-user"><div class="t-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="Priya" loading="lazy"/></div><div><div class="t-name">Priya Menon</div><div class="t-role">Tenant · Chennai</div></div></div></div>
+      <div class="testimonial-card"><div class="t-stars">★★★★★</div><p class="t-text">"As a landlord, tenants come pre-screened with reputation scores. Divya was my best tenant — verified and reviewed by previous landlords before she even messaged me."</p><div class="t-user"><div class="t-avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80" alt="Karan" loading="lazy"/></div><div><div class="t-name">Karan Patel</div><div class="t-role">Landlord · Bangalore</div></div></div></div>
+      <div class="testimonial-card"><div class="t-stars">★★★★☆</div><p class="t-text">"Relocated from Hyderabad to Bangalore for my job. Found a Koramangala flat and a flatmate within a week. The notification system kept me updated every step."</p><div class="t-user"><div class="t-avatar"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&q=80" alt="Ananya" loading="lazy"/></div><div><div class="t-name">Ananya Krishnan</div><div class="t-role">Tenant · Bangalore</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div><div class="footer-logo">🏠 Rent<span>Mate</span></div><p class="footer-desc">A hyperlocal rental and flatmate finder for students and young professionals across Chennai and Bangalore. Built on a fully normalized relational database.</p><p style="font-size:.72rem;color:rgba(255,255,255,.2);margin-top:1rem;">Database Course Assignment · 2nd Year CS · Group Project</p></div>
+      <div class="footer-col"><h5>Platform</h5><ul><li><a href="properties.html">Properties</a></li><li><a href="flatmates.html">Find Flatmate</a></li><li><a href="dashboard.html">Dashboard</a></li></ul></div>
+      <div class="footer-col"><h5>Account</h5><ul><li><a href="auth.html">Login</a></li><li><a href="auth.html">Register</a></li><li><a href="profile.html">My Profile</a></li></ul></div>
+      <div class="footer-col"><h5>Cities</h5><ul><li><a href="properties.html?city=Chennai">Chennai</a></li><li><a href="properties.html?city=Bangalore">Bangalore</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 RentMate. Built for DBMS Course Assignment.</span><a href="https://github.com/visvajithkesavan-crypto/rental-flatmate-finder" target="_blank">View on GitHub →</a></div>
+  </div>
+</footer>
+
+<script>
+  function switchTab(btn,type){document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('typeField').style.display=type==='flat'?'none':'';document.getElementById('locInput').placeholder=type==='flat'?'Preferred city or area...':'Chennai, Adyar, Koramangala...'}
+  function doSearch(){const q=document.getElementById('locInput').value.trim(),b=document.getElementById('budgetSel').value,p=new URLSearchParams();if(q)p.set('city',q);if(b)p.set('budget',b);window.location.href=`properties.html?${p.toString()}`}
+  document.getElementById('locInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+  function filterProps(btn,type){document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.prop-card').forEach(c=>{c.style.display=(type==='all'||c.dataset.type===type)?'block':'none'})}
+  const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='translateY(0)'}})},{threshold:.1});
+  document.querySelectorAll('.prop-card,.hiw-card,.testimonial-card,.stat-card').forEach(el=>{el.style.opacity=0;el.style.transform='translateY(24px)';el.style.transition='opacity .5s ease,transform .5s ease';observer.observe(el)});
+</script>
+</body>
+</html>

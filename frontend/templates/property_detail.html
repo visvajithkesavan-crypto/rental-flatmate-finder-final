@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentMate — 2BHK Apartment in Adyar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0F2444;--navy-mid:#1B3D6F;--navy-light:#E8F0FB;
+      --green:#00A86B;--green-dark:#007A4D;--green-light:#E6F7F1;
+      --amber:#F59E0B;--text:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;
+      --border:#E5E7EB;--white:#FFFFFF;--bg:#F8FAFC;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:0 4px 20px rgba(0,0,0,0.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,0.14);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+      --serif:'Playfair Display',serif;--sans:'Plus Jakarta Sans',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 2.5rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-logo-icon{width:36px;height:36px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .nav-logo-text{font-family:var(--serif);font-size:1.4rem;color:var(--navy);font-weight:700}
+    .nav-logo-text span{color:var(--green)}
+    .nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+    .nav-links a{padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;color:var(--text-muted);transition:all .18s}
+    .nav-links a:hover,.nav-links a.active{color:var(--navy);background:var(--bg)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.3rem;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;white-space:nowrap}
+    .btn-ghost{background:transparent;color:var(--text-muted)}
+    .btn-ghost:hover{color:var(--navy)}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+    .btn-outline:hover{border-color:var(--navy);background:var(--navy-light)}
+    .btn-navy{background:var(--navy);color:white}
+    .btn-navy:hover{background:var(--navy-mid);transform:translateY(-1px)}
+    .btn-green{background:var(--green);color:white}
+    .btn-green:hover{background:var(--green-dark);transform:translateY(-1px)}
+    .btn-lg{padding:.85rem 2rem;font-size:1rem;border-radius:var(--radius-md)}
+
+    /* BREADCRUMB */
+    .breadcrumb-bar{background:white;border-bottom:1px solid var(--border);padding:.75rem 2.5rem}
+    .breadcrumb-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .breadcrumb{font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+    .breadcrumb a{color:var(--text-muted)}
+    .breadcrumb a:hover{color:var(--navy)}
+    .breadcrumb-actions{display:flex;gap:.5rem}
+
+    /* PHOTO GALLERY */
+    .gallery{max-width:1280px;margin:1.5rem auto 0;padding:0 2.5rem}
+    .gallery-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:240px 240px;gap:10px;border-radius:var(--radius-lg);overflow:hidden}
+    .gallery-main{grid-row:1/3;position:relative;overflow:hidden}
+    .gallery-main img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .gallery-main:hover img{transform:scale(1.03)}
+    .gallery-thumb{position:relative;overflow:hidden}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .gallery-thumb:hover img{transform:scale(1.06)}
+    .gallery-thumb.last{position:relative}
+    .gallery-more{position:absolute;inset:0;background:rgba(15,36,68,.65);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;cursor:pointer;font-weight:700;font-size:1.1rem;gap:4px}
+    .gallery-more span{font-size:.8rem;opacity:.8}
+    .gallery-status{position:absolute;top:16px;left:16px;padding:.3rem .8rem;border-radius:99px;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--green);color:white}
+
+    /* MAIN LAYOUT */
+    .detail-body{max-width:1280px;margin:2rem auto;padding:0 2.5rem;display:grid;grid-template-columns:1fr 360px;gap:2.5rem;align-items:start}
+
+    /* LEFT COLUMN */
+    .detail-left{}
+
+    /* Title block */
+    .title-block{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm)}
+    .title-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+    .title-badges{display:flex;gap:.5rem;margin-bottom:.75rem}
+    .badge{padding:.25rem .75rem;border-radius:99px;font-size:.72rem;font-weight:600;text-transform:capitalize}
+    .badge-type{background:var(--navy-light);color:var(--navy)}
+    .badge-status{background:var(--green-light);color:var(--green-dark)}
+    .prop-title{font-family:var(--serif);font-size:2rem;color:var(--navy);margin-bottom:.5rem;line-height:1.2}
+    .prop-location{font-size:.95rem;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+    .price-block{text-align:right}
+    .price-main{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--navy);line-height:1}
+    .price-unit{font-size:.85rem;color:var(--text-muted)}
+    .price-note{font-size:.75rem;color:var(--green);margin-top:4px;font-weight:500}
+
+    /* Key details */
+    .key-details{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;padding-top:1.5rem;border-top:1px solid var(--border);margin-top:1.5rem}
+    .key-detail{text-align:center}
+    .key-detail-icon{font-size:1.5rem;margin-bottom:.4rem}
+    .key-detail-val{font-weight:700;font-size:1rem;color:var(--navy)}
+    .key-detail-lbl{font-size:.72rem;color:var(--text-muted);margin-top:2px}
+
+    /* Section cards */
+    .section-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm)}
+    .section-card h3{font-family:var(--serif);font-size:1.3rem;color:var(--navy);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+
+    /* Description */
+    .description{font-size:.95rem;color:var(--text-muted);line-height:1.8}
+
+    /* Amenities grid */
+    .amenities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+    .amenity-item{display:flex;align-items:center;gap:.6rem;padding:.75rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+    .amenity-icon{font-size:1.1rem}
+    .amenity-name{font-size:.85rem;font-weight:500;color:var(--text)}
+
+    /* Location map placeholder */
+    .map-placeholder{height:220px;background:linear-gradient(135deg,var(--navy-light),#DBEAFE);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--navy);gap:.5rem;margin-bottom:1rem}
+    .map-placeholder-icon{font-size:2.5rem}
+    .map-placeholder-text{font-size:.9rem;font-weight:600}
+    .map-placeholder-sub{font-size:.8rem;color:var(--text-muted)}
+    .nearby-items{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .nearby-item{display:flex;align-items:center;gap:.6rem;font-size:.85rem;color:var(--text-muted)}
+
+    /* Reviews */
+    .reviews-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+    .reviews-header h3{font-family:var(--serif);font-size:1.3rem;color:var(--navy);margin:0;border:none;padding:0}
+    .rating-big{display:flex;align-items:center;gap:.5rem}
+    .rating-number{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--navy)}
+    .rating-stars{color:var(--amber);font-size:1rem}
+    .rating-count{font-size:.8rem;color:var(--text-muted)}
+    .review-card{padding:1.25rem 0;border-bottom:1px solid var(--border)}
+    .review-card:last-child{border-bottom:none}
+    .review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+    .reviewer{display:flex;align-items:center;gap:.75rem}
+    .reviewer-avatar{width:38px;height:38px;border-radius:50%;overflow:hidden}
+    .reviewer-avatar img{width:100%;height:100%;object-fit:cover}
+    .reviewer-name{font-weight:600;font-size:.9rem;color:var(--navy)}
+    .reviewer-date{font-size:.75rem;color:var(--text-light)}
+    .review-stars{color:var(--amber);font-size:.85rem}
+    .review-text{font-size:.875rem;color:var(--text-muted);line-height:1.7;font-style:italic}
+
+    /* RIGHT COLUMN — Booking card */
+    .booking-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-md);position:sticky;top:88px}
+    .booking-price{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
+    .booking-price-unit{font-size:.85rem;color:var(--text-muted);margin-bottom:1.5rem}
+    .booking-divider{height:1px;background:var(--border);margin:1.25rem 0}
+    .form-group{margin-bottom:1rem}
+    .form-label{font-size:.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;display:block}
+    .form-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s}
+    .form-input:focus{border-color:var(--navy)}
+    .form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem 1rem;font-family:var(--sans);font-size:.9rem;color:var(--text);outline:none;background:white;cursor:pointer}
+    .book-btn{width:100%;padding:1rem;background:var(--navy);color:white;border:none;border-radius:var(--radius-md);font-family:var(--sans);font-weight:700;font-size:1rem;cursor:pointer;transition:all .2s;margin-top:1rem}
+    .book-btn:hover{background:var(--navy-mid);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+    .book-note{font-size:.75rem;color:var(--text-light);text-align:center;margin-top:.75rem}
+
+    /* Cost breakdown */
+    .cost-row{display:flex;justify-content:space-between;font-size:.875rem;margin-bottom:.5rem}
+    .cost-row.total{font-weight:700;color:var(--navy);font-size:.95rem;padding-top:.5rem;border-top:1px solid var(--border)}
+
+    /* Landlord card */
+    .landlord-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1rem;box-shadow:var(--shadow-sm)}
+    .landlord-card h4{font-size:.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem}
+    .landlord-profile{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+    .landlord-big-avatar{width:52px;height:52px;border-radius:50%;background:var(--navy-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:var(--navy)}
+    .landlord-detail-name{font-weight:700;font-size:1rem;color:var(--navy)}
+    .landlord-detail-role{font-size:.78rem;color:var(--text-muted)}
+    .landlord-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:1rem}
+    .landlord-stat{text-align:center;padding:.6rem;background:var(--bg);border-radius:var(--radius-sm)}
+    .landlord-stat-val{font-weight:700;font-size:.95rem;color:var(--navy)}
+    .landlord-stat-lbl{font-size:.68rem;color:var(--text-muted)}
+    .contact-btn{width:100%;padding:.7rem;background:transparent;border:1.5px solid var(--navy);color:var(--navy);border-radius:var(--radius-sm);font-family:var(--sans);font-weight:600;font-size:.875rem;cursor:pointer;transition:all .2s}
+    .contact-btn:hover{background:var(--navy-light)}
+
+    /* SUCCESS MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal{background:white;border-radius:var(--radius-lg);padding:2.5rem;max-width:420px;width:90%;text-align:center;box-shadow:var(--shadow-lg)}
+    .modal-icon{font-size:3.5rem;margin-bottom:1rem}
+    .modal h3{font-family:var(--serif);font-size:1.5rem;color:var(--navy);margin-bottom:.5rem}
+    .modal p{font-size:.9rem;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.7}
+    .modal-actions{display:flex;gap:.75rem;justify-content:center}
+
+    /* FOOTER */
+    .footer{background:var(--navy);padding:3rem 2.5rem 2rem;margin-top:4rem}
+    .footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .footer-logo{font-family:var(--serif);font-size:1.3rem;color:white;font-weight:700}
+    .footer-logo span{color:#6EE7B7}
+    .footer-links{display:flex;gap:2rem}
+    .footer-links a{font-size:.85rem;color:rgba(255,255,255,.45);transition:color .18s}
+    .footer-links a:hover{color:white}
+    .footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🏠</div>
+      <div class="nav-logo-text">Rent<span>Mate</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="properties.html" class="active">Properties</a></li>
+      <li><a href="flatmates.html">Find Flatmate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-ghost">Login</a>
+      <a href="auth.html" class="btn btn-green">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> ›
+      <a href="properties.html">Properties</a> ›
+      2BHK Apartment in Adyar
+    </div>
+    <div class="breadcrumb-actions">
+      <button class="btn btn-outline" style="padding:.4rem .9rem;font-size:.8rem;" onclick="toggleSave(this)">🤍 Save</button>
+      <button class="btn btn-outline" style="padding:.4rem .9rem;font-size:.8rem;">↗ Share</button>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO GALLERY -->
+<div class="gallery">
+  <div class="gallery-grid">
+    <div class="gallery-main">
+      <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80" alt="Main photo" />
+      <span class="gallery-status">Available</span>
+    </div>
+    <div class="gallery-thumb">
+      <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=500&q=80" alt="Living room" />
+    </div>
+    <div class="gallery-thumb">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80" alt="Kitchen" />
+    </div>
+    <div class="gallery-thumb">
+      <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=500&q=80" alt="Bedroom" />
+    </div>
+    <div class="gallery-thumb last" onclick="alert('Full gallery coming in the live version!')">
+      <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&q=80" alt="Bathroom" />
+      <div class="gallery-more">+3 <span>more photos</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL BODY -->
+<div class="detail-body">
+
+  <!-- LEFT COLUMN -->
+  <div class="detail-left">
+
+    <!-- Title Block -->
+    <div class="title-block">
+      <div class="title-top">
+        <div>
+          <div class="title-badges">
+            <span class="badge badge-type">Apartment</span>
+            <span class="badge badge-status">✅ Available</span>
+          </div>
+          <h1 class="prop-title">2BHK Apartment in Adyar</h1>
+          <div class="prop-location">📍 Adyar, Chennai, 600020</div>
+        </div>
+        <div class="price-block">
+          <div class="price-main">₹18,000</div>
+          <div class="price-unit">per month</div>
+          <div class="price-note">🏷️ Below city average (₹20,833)</div>
+        </div>
+      </div>
+      <div class="key-details">
+        <div class="key-detail">
+          <div class="key-detail-icon">🛏️</div>
+          <div class="key-detail-val">2 BHK</div>
+          <div class="key-detail-lbl">Bedrooms</div>
+        </div>
+        <div class="key-detail">
+          <div class="key-detail-icon">📐</div>
+          <div class="key-detail-val">950 sq.ft</div>
+          <div class="key-detail-lbl">Total Area</div>
+        </div>
+        <div class="key-detail">
+          <div class="key-detail-icon">🏢</div>
+          <div class="key-detail-val">4th Floor</div>
+          <div class="key-detail-lbl">Floor</div>
+        </div>
+        <div class="key-detail">
+          <div class="key-detail-icon">📅</div>
+          <div class="key-detail-val">Immediate</div>
+          <div class="key-detail-lbl">Available From</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="section-card">
+      <h3>About this property</h3>
+      <p class="description">
+        A well-maintained 2BHK apartment on the 4th floor of a premium residential complex in Adyar, one of Chennai's most sought-after neighborhoods. The apartment is fully furnished with modern amenities and receives excellent natural light throughout the day.
+        <br/><br/>
+        Ideal for working professionals or a small family. The building has 24/7 security, a lift, covered parking, and a power backup generator. Located just 5 minutes from the Adyar beach and close to major IT corridors, schools, and hospitals.
+      </p>
+    </div>
+
+    <!-- Amenities -->
+    <div class="section-card">
+      <h3>Amenities</h3>
+      <div class="amenities-grid">
+        <div class="amenity-item"><span class="amenity-icon">📶</span><span class="amenity-name">WiFi</span></div>
+        <div class="amenity-item"><span class="amenity-icon">❄️</span><span class="amenity-name">Air Conditioning</span></div>
+        <div class="amenity-item"><span class="amenity-icon">🚗</span><span class="amenity-name">Parking</span></div>
+        <div class="amenity-item"><span class="amenity-icon">🔋</span><span class="amenity-name">Power Backup</span></div>
+        <div class="amenity-item"><span class="amenity-icon">🛗</span><span class="amenity-name">Lift</span></div>
+        <div class="amenity-item"><span class="amenity-icon">🔒</span><span class="amenity-name">Security Guard</span></div>
+        <div class="amenity-item"><span class="amenity-icon">📹</span><span class="amenity-name">CCTV</span></div>
+        <div class="amenity-item"><span class="amenity-icon">🏊</span><span class="amenity-name">Swimming Pool</span></div>
+        <div class="amenity-item"><span class="amenity-icon">🌿</span><span class="amenity-name">Garden</span></div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="section-card">
+      <h3>Location & Nearby</h3>
+      <div class="map-placeholder">
+        <div class="map-placeholder-icon">🗺️</div>
+        <div class="map-placeholder-text">Adyar, Chennai 600020</div>
+        <div class="map-placeholder-sub">Interactive map available in live version</div>
+      </div>
+      <div class="nearby-items">
+        <div class="nearby-item">🚇 <strong>Adyar Metro</strong> — 0.8 km</div>
+        <div class="nearby-item">🛒 <strong>Adyar Ananda Bhavan</strong> — 0.5 km</div>
+        <div class="nearby-item">🏥 <strong>Apollo Hospital</strong> — 2.1 km</div>
+        <div class="nearby-item">🏫 <strong>IIT Madras</strong> — 3.4 km</div>
+        <div class="nearby-item">✈️ <strong>Chennai Airport</strong> — 12 km</div>
+        <div class="nearby-item">🏖️ <strong>Adyar Beach</strong> — 1.2 km</div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="section-card">
+      <div class="reviews-header">
+        <h3>Reviews</h3>
+        <div class="rating-big">
+          <div class="rating-number">4.5</div>
+          <div>
+            <div class="rating-stars">★★★★★</div>
+            <div class="rating-count">2 reviews</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-top">
+          <div class="reviewer">
+            <div class="reviewer-avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="Priya" />
+            </div>
+            <div>
+              <div class="reviewer-name">Priya Menon</div>
+              <div class="reviewer-date">January 2025</div>
+            </div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+        </div>
+        <p class="review-text">"Arjun is an excellent landlord. Very responsive and the apartment was exactly as described. The power backup is a lifesaver during Chennai summers!"</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-top">
+          <div class="reviewer">
+            <div class="reviewer-avatar">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80" alt="Rahul" />
+            </div>
+            <div>
+              <div class="reviewer-name">Rahul Verma</div>
+              <div class="reviewer-date">November 2024</div>
+            </div>
+          </div>
+          <div class="review-stars">★★★★☆</div>
+        </div>
+        <p class="review-text">"Great apartment in a prime location. The building maintenance is top notch and the security team is very professional. Highly recommend for working professionals."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="detail-right">
+
+    <!-- Booking Card -->
+    <div class="booking-card">
+      <div class="booking-price">₹18,000</div>
+      <div class="booking-price-unit">per month · 2BHK · 950 sq.ft</div>
+
+      <div class="form-group">
+        <label class="form-label">Move-in Date</label>
+        <input type="date" class="form-input" id="moveInDate" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lease Duration</label>
+        <select class="form-select" id="leaseDuration" onchange="updateCost()">
+          <option value="6">6 Months</option>
+          <option value="11" selected>11 Months</option>
+          <option value="12">12 Months</option>
+          <option value="24">24 Months</option>
+        </select>
+      </div>
+
+      <div class="booking-divider"></div>
+
+      <!-- Cost breakdown -->
+      <div class="cost-row">
+        <span style="color:var(--text-muted)">Monthly Rent</span>
+        <span>₹18,000</span>
+      </div>
+      <div class="cost-row">
+        <span style="color:var(--text-muted)">Security Deposit (2 months)</span>
+        <span>₹36,000</span>
+      </div>
+      <div class="cost-row">
+        <span style="color:var(--text-muted)">Maintenance (est.)</span>
+        <span>₹1,500/mo</span>
+      </div>
+      <div class="cost-row total">
+        <span>Total Move-in Cost</span>
+        <span id="totalCost">₹54,000</span>
+      </div>
+
+      <button class="book-btn" onclick="showBookingModal()">
+        🏠 Request Booking
+      </button>
+      <div class="book-note">You won't be charged yet. The landlord will confirm your request.</div>
+    </div>
+
+    <!-- Landlord Card -->
+    <div class="landlord-card">
+      <h4>Listed by</h4>
+      <div class="landlord-profile">
+        <div class="landlord-big-avatar">AS</div>
+        <div>
+          <div class="landlord-detail-name">Arjun Sharma</div>
+          <div class="landlord-detail-role">Landlord · Member since 2024</div>
+        </div>
+      </div>
+      <div class="landlord-stats">
+        <div class="landlord-stat">
+          <div class="landlord-stat-val">4.5 ⭐</div>
+          <div class="landlord-stat-lbl">Rating</div>
+        </div>
+        <div class="landlord-stat">
+          <div class="landlord-stat-val">2</div>
+          <div class="landlord-stat-lbl">Properties</div>
+        </div>
+        <div class="landlord-stat">
+          <div class="landlord-stat-val">100%</div>
+          <div class="landlord-stat-lbl">Response</div>
+        </div>
+      </div>
+      <button class="contact-btn" onclick="alert('Login to contact the landlord!')">
+        💬 Contact Landlord
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOOKING SUCCESS MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h3>Booking Requested!</h3>
+    <p>Your booking request for <strong>2BHK Apartment in Adyar</strong> has been sent to Arjun Sharma. You'll receive a notification once he confirms.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+      <a href="dashboard.html" class="btn btn-navy">View Dashboard →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">🏠 Rent<span>Mate</span></div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="properties.html">Properties</a>
+      <a href="flatmates.html">Find Flatmate</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+    <div class="footer-copy">© 2025 RentMate · DBMS Assignment</div>
+  </div>
+</footer>
+
+<script>
+  // Set default move-in date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('moveInDate').value = today;
+  document.getElementById('moveInDate').min = today;
+
+  // Update total cost on lease duration change
+  function updateCost() {
+    const months   = parseInt(document.getElementById('leaseDuration').value);
+    const rent     = 18000;
+    const deposit  = rent * 2;
+    const total    = deposit + rent;
+    document.getElementById('totalCost').textContent = `₹${total.toLocaleString('en-IN')}`;
+  }
+
+  // Show booking success modal
+  function showBookingModal() {
+    const date = document.getElementById('moveInDate').value;
+    if (!date) { alert('Please select a move-in date.'); return; }
+    document.getElementById('bookingModal').classList.add('show');
+    // In real app: POST /book with tenant_id, property_id, move_in_date
+    // This calls the book_property() stored procedure in MySQL
+  }
+
+  function closeModal() {
+    document.getElementById('bookingModal').classList.remove('show');
+  }
+
+  // Close modal on overlay click
+  document.getElementById('bookingModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Save toggle
+  function toggleSave(btn) {
+    btn.textContent = btn.textContent.includes('🤍') ? '❤️ Saved' : '🤍 Save';
+  }
+</script>
+</body>
+</html>

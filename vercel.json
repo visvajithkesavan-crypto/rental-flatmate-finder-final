@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/", "dest": "/frontend/templates/index.html" },
+    { "src": "/properties", "dest": "/frontend/templates/properties.html" },
+    { "src": "/property", "dest": "/frontend/templates/property_detail.html" },
+    { "src": "/flatmates", "dest": "/frontend/templates/flatmates.html" },
+    { "src": "/dashboard", "dest": "/frontend/templates/dashboard.html" },
+    { "src": "/auth", "dest": "/frontend/templates/auth.html" },
+    { "src": "/profile", "dest": "/frontend/templates/profile.html" },
+    { "src": "/static/(.*)", "dest": "/frontend/static/$1" }
+  ]
+}

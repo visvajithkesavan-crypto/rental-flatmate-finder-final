@@ -50,6 +50,10 @@ def index():
 def properties():
     return render_template('properties.html')
 
+@app.route('/property')
+def property_detail_default():
+    return render_template('property_detail.html')
+
 @app.route('/property/<int:property_id>')
 def property_detail(property_id):
     return render_template('property_detail.html')
@@ -98,4 +102,6 @@ if __name__ == '__main__':
     print("=" * 50)
     # debug=True means Flask auto-reloads when you save a file
     # OUTSIDE COURSE: Never use debug=True in production
-    app.run(debug=True, port=5000)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -138,19 +138,19 @@
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
+    <a href="/" class="nav-logo">
       <div class="nav-logo-icon">🏠</div>
       <div class="nav-logo-text">Rent<span>Mate</span></div>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="properties.html" class="active">Properties</a></li>
-      <li><a href="flatmates.html">Find Flatmate</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/properties" class="active">Properties</a></li>
+      <li><a href="/flatmates">Find Flatmate</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="auth.html" class="btn btn-ghost">Login</a>
-      <a href="auth.html" class="btn btn-green">Get Started →</a>
+      <a href="/auth" class="btn btn-ghost">Login</a>
+      <a href="/auth" class="btn btn-green">Get Started →</a>
     </div>
   </div>
 </nav>
@@ -159,7 +159,7 @@
 <div class="page-header">
   <div class="page-header-inner">
     <div class="breadcrumb">
-      <a href="index.html">Home</a> › Properties
+      <a href="/">Home</a> › Properties
     </div>
     <h1>Browse Properties</h1>
     <p>6 properties available across Chennai and Bangalore</p>
@@ -309,7 +309,7 @@
       <div class="prop-card"
            data-type="apartment" data-city="Chennai" data-price="18000"
            data-amenities="wifi ac parking lift power-backup" data-rating="4.5"
-           onclick="location.href='property_detail.html'">
+           onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80" alt="2BHK Adyar" loading="lazy"/>
           <span class="prop-status status-available">Available</span>
@@ -329,7 +329,7 @@
               <div class="landlord-avatar">AS</div>
               <div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5</div></div>
             </div>
-            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -337,7 +337,7 @@
       <div class="prop-card"
            data-type="studio" data-city="Chennai" data-price="9500"
            data-amenities="wifi ac washing-machine" data-rating="4.5"
-           onclick="location.href='property_detail.html'">
+           onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&q=80" alt="Studio Anna Nagar" loading="lazy"/>
           <span class="prop-status status-available">Available</span>
@@ -356,7 +356,7 @@
               <div class="landlord-avatar">AS</div>
               <div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5</div></div>
             </div>
-            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -364,7 +364,7 @@
       <div class="prop-card"
            data-type="apartment" data-city="Bangalore" data-price="22000"
            data-amenities="wifi ac parking gym lift cctv" data-rating="4.7"
-           onclick="location.href='property_detail.html'">
+           onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=700&q=80" alt="1BHK Koramangala" loading="lazy"/>
           <span class="prop-status status-available">Available</span>
@@ -384,7 +384,7 @@
               <div class="landlord-avatar">KP</div>
               <div><div class="landlord-name">Karan Patel</div><div class="landlord-rating">⭐ 4.7</div></div>
             </div>
-            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -392,7 +392,7 @@
       <div class="prop-card"
            data-type="house" data-city="Chennai" data-price="35000"
            data-amenities="wifi ac parking gym pool power-backup" data-rating="3.8"
-           onclick="location.href='property_detail.html'">
+           onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&q=80" alt="3BHK T Nagar" loading="lazy"/>
           <span class="prop-status status-available">Available</span>
@@ -412,7 +412,7 @@
               <div class="landlord-avatar">RV</div>
               <div><div class="landlord-name">Rahul Verma</div><div class="landlord-rating">⭐ 3.8</div></div>
             </div>
-            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -420,7 +420,7 @@
       <div class="prop-card"
            data-type="studio" data-city="Bangalore" data-price="11000"
            data-amenities="wifi washing-machine" data-rating="4.1"
-           onclick="location.href='property_detail.html'">
+           onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80" alt="Studio Koramangala" loading="lazy"/>
           <span class="prop-status status-available">Available</span>
@@ -439,7 +439,7 @@
               <div class="landlord-avatar">AM</div>
               <div><div class="landlord-name">Amit Singh</div><div class="landlord-rating">⭐ 4.1</div></div>
             </div>
-            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -447,7 +447,7 @@
       <div class="prop-card"
            data-type="apartment" data-city="Bangalore" data-price="25000"
            data-amenities="wifi ac parking security lift" data-rating="3.9"
-           onclick="location.href='property_detail.html'">
+           onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=80" alt="2BHK Indiranagar" loading="lazy"/>
           <span class="prop-status status-available">Available</span>
@@ -467,7 +467,7 @@
               <div class="landlord-avatar">RG</div>
               <div><div class="landlord-name">Rohan Gupta</div><div class="landlord-rating">⭐ 3.9</div></div>
             </div>
-            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.38rem .9rem;font-size:.78rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -488,10 +488,10 @@
   <div class="footer-inner">
     <div class="footer-logo">🏠 Rent<span>Mate</span></div>
     <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="flatmates.html">Find Flatmate</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="auth.html">Login</a>
+      <a href="/">Home</a>
+      <a href="/flatmates">Find Flatmate</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/auth">Login</a>
     </div>
     <div class="footer-copy">© 2025 RentMate · DBMS Assignment</div>
   </div>

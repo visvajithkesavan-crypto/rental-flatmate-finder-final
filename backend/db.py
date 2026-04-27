@@ -17,7 +17,7 @@ def get_db_connection():
             host='localhost',
             port=3306,
             user='root',
-            password='YOUR_PASSWORD_HERE',  # ← change this
+            password='visva',  # ← change this
             database='rental_flatmate_db'
         )
         return connection

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -212,19 +212,19 @@
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
+    <a href="/" class="nav-logo">
       <div class="nav-logo-icon">🏠</div>
       <div class="nav-logo-text">Rent<span>Mate</span></div>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="properties.html">Properties</a></li>
-      <li><a href="flatmates.html">Find Flatmate</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/properties">Properties</a></li>
+      <li><a href="/flatmates">Find Flatmate</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="auth.html" class="btn btn-ghost">Login</a>
-      <a href="auth.html" class="btn btn-green">Get Started →</a>
+      <a href="/auth" class="btn btn-ghost">Login</a>
+      <a href="/auth" class="btn btn-green">Get Started →</a>
     </div>
   </div>
 </nav>
@@ -240,8 +240,8 @@
       <h1 class="hero-title fade-up d2">Find your perfect<br/>home <em>and</em><br/>ideal flatmate</h1>
       <p class="hero-desc fade-up d3">The only platform that combines property search with smart flatmate matching — powered by a compatibility engine that scores lifestyle, budget, and habits out of 100.</p>
       <div class="hero-actions fade-up d4">
-        <a href="properties.html" class="btn btn-green btn-xl">Browse Properties</a>
-        <a href="flatmates.html" class="btn btn-xl" style="background:rgba(255,255,255,.1);color:white;border:1.5px solid rgba(255,255,255,.2)">Find Flatmate</a>
+        <a href="/properties" class="btn btn-green btn-xl">Browse Properties</a>
+        <a href="/flatmates" class="btn btn-xl" style="background:rgba(255,255,255,.1);color:white;border:1.5px solid rgba(255,255,255,.2)">Find Flatmate</a>
       </div>
       <div class="hero-trust fade-up d5">
         <div class="trust-item">✅ <span>8+</span> Properties</div>
@@ -317,12 +317,12 @@
           <button class="filter-pill" onclick="filterProps(this,'studio')">Studio</button>
           <button class="filter-pill" onclick="filterProps(this,'house')">House</button>
         </div>
-        <a href="properties.html" class="btn btn-outline">View all →</a>
+        <a href="/properties" class="btn btn-outline">View all →</a>
       </div>
     </div>
     <div class="props-grid">
 
-      <div class="prop-card" data-type="apartment" onclick="location.href='property_detail.html'">
+      <div class="prop-card" data-type="apartment" onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80" alt="2BHK Adyar" loading="lazy"/>
           <span class="prop-status status-available">Available</span><span class="prop-type">Apartment</span><div class="prop-save">🤍</div>
@@ -334,12 +334,12 @@
           <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🚗 Parking</span><span class="prop-tag">🔋 Power Backup</span><span class="prop-tag">🛗 Lift</span></div>
           <div class="prop-footer">
             <div class="prop-landlord"><div class="landlord-avatar">AS</div><div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5 · Landlord</div></div></div>
-            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
 
-      <div class="prop-card" data-type="apartment" onclick="location.href='property_detail.html'">
+      <div class="prop-card" data-type="apartment" onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=700&q=80" alt="1BHK Koramangala" loading="lazy"/>
           <span class="prop-status status-available">Available</span><span class="prop-type">Apartment</span><div class="prop-save">🤍</div>
@@ -351,12 +351,12 @@
           <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🏋️ Gym</span><span class="prop-tag">📹 CCTV</span><span class="prop-tag">🛗 Lift</span></div>
           <div class="prop-footer">
             <div class="prop-landlord"><div class="landlord-avatar">KP</div><div><div class="landlord-name">Karan Patel</div><div class="landlord-rating">⭐ 4.7 · Landlord</div></div></div>
-            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
 
-      <div class="prop-card" data-type="house" onclick="location.href='property_detail.html'">
+      <div class="prop-card" data-type="house" onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&q=80" alt="3BHK T Nagar" loading="lazy"/>
           <span class="prop-status status-available">Available</span><span class="prop-type">House</span><div class="prop-save">🤍</div>
@@ -368,12 +368,12 @@
           <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🚗 Parking</span><span class="prop-tag">🏋️ Gym</span><span class="prop-tag">🏊 Pool</span></div>
           <div class="prop-footer">
             <div class="prop-landlord"><div class="landlord-avatar">RV</div><div><div class="landlord-name">Rahul Verma</div><div class="landlord-rating">⭐ 3.8 · Landlord</div></div></div>
-            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
 
-      <div class="prop-card" data-type="studio" onclick="location.href='property_detail.html'">
+      <div class="prop-card" data-type="studio" onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&q=80" alt="Studio Anna Nagar" loading="lazy"/>
           <span class="prop-status status-available">Available</span><span class="prop-type">Studio</span><div class="prop-save">🤍</div>
@@ -385,12 +385,12 @@
           <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🫧 Washing Machine</span></div>
           <div class="prop-footer">
             <div class="prop-landlord"><div class="landlord-avatar">AS</div><div><div class="landlord-name">Arjun Sharma</div><div class="landlord-rating">⭐ 4.5 · Landlord</div></div></div>
-            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
 
-      <div class="prop-card" data-type="studio" onclick="location.href='property_detail.html'">
+      <div class="prop-card" data-type="studio" onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80" alt="Studio Koramangala" loading="lazy"/>
           <span class="prop-status status-available">Available</span><span class="prop-type">Studio</span><div class="prop-save">🤍</div>
@@ -402,12 +402,12 @@
           <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">🫧 Washing Machine</span></div>
           <div class="prop-footer">
             <div class="prop-landlord"><div class="landlord-avatar">AM</div><div><div class="landlord-name">Amit Singh</div><div class="landlord-rating">⭐ 4.1 · Landlord</div></div></div>
-            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
 
-      <div class="prop-card" data-type="apartment" onclick="location.href='property_detail.html'">
+      <div class="prop-card" data-type="apartment" onclick="location.href='/property'">
         <div class="prop-img-wrap">
           <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=80" alt="2BHK Indiranagar" loading="lazy"/>
           <span class="prop-status status-available">Available</span><span class="prop-type">Apartment</span><div class="prop-save">🤍</div>
@@ -419,7 +419,7 @@
           <div class="prop-tags"><span class="prop-tag">📶 WiFi</span><span class="prop-tag">❄️ AC</span><span class="prop-tag">🚗 Parking</span><span class="prop-tag">🔒 Security</span><span class="prop-tag">🛗 Lift</span></div>
           <div class="prop-footer">
             <div class="prop-landlord"><div class="landlord-avatar">RG</div><div><div class="landlord-name">Rohan Gupta</div><div class="landlord-rating">⭐ 3.9 · Landlord</div></div></div>
-            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='property_detail.html'">Book Now</button>
+            <button class="btn btn-navy" style="padding:.4rem 1rem;font-size:.8rem;" onclick="event.stopPropagation();location.href='/property'">Book Now</button>
           </div>
         </div>
       </div>
@@ -453,7 +453,7 @@
         <div class="section-eyebrow">Smart Matching</div>
         <h2 class="section-title">Find your<br/>perfect flatmate</h2>
         <p>Our compatibility engine compares sleep schedules, diet preferences, and budgets — giving every pair a score out of 100. Stop guessing, start matching.</p>
-        <a href="flatmates.html" class="btn btn-green btn-lg">Find My Match →</a>
+        <a href="/flatmates" class="btn btn-green btn-lg">Find My Match →</a>
       </div>
       <div class="fm-right">
         <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" alt="Happy flatmates" loading="lazy"/>
@@ -473,11 +473,11 @@
   <div class="section-inner">
     <div style="margin-bottom:2.5rem;"><div class="section-eyebrow">Explore Cities</div><h2 class="section-title">Where we operate</h2></div>
     <div class="cities-grid">
-      <div class="city-card" onclick="location.href='properties.html?city=Chennai'">
+      <div class="city-card" onclick="location.href='/properties?city=Chennai'">
         <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=900&q=80" alt="Chennai" loading="lazy"/>
         <div class="city-overlay"><div class="city-name">Chennai</div><div class="city-count">5 properties · Adyar, Anna Nagar, T Nagar</div></div>
       </div>
-      <div class="city-card" onclick="location.href='properties.html?city=Bangalore'">
+      <div class="city-card" onclick="location.href='/properties?city=Bangalore'">
         <img src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=900&q=80" alt="Bangalore" loading="lazy"/>
         <div class="city-overlay"><div class="city-name">Bangalore</div><div class="city-count">3 properties · Koramangala, Indiranagar, Whitefield</div></div>
       </div>
@@ -502,9 +502,9 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div><div class="footer-logo">🏠 Rent<span>Mate</span></div><p class="footer-desc">A hyperlocal rental and flatmate finder for students and young professionals across Chennai and Bangalore. Built on a fully normalized relational database.</p><p style="font-size:.72rem;color:rgba(255,255,255,.2);margin-top:1rem;">Database Course Assignment · 2nd Year CS · Group Project</p></div>
-      <div class="footer-col"><h5>Platform</h5><ul><li><a href="properties.html">Properties</a></li><li><a href="flatmates.html">Find Flatmate</a></li><li><a href="dashboard.html">Dashboard</a></li></ul></div>
-      <div class="footer-col"><h5>Account</h5><ul><li><a href="auth.html">Login</a></li><li><a href="auth.html">Register</a></li><li><a href="profile.html">My Profile</a></li></ul></div>
-      <div class="footer-col"><h5>Cities</h5><ul><li><a href="properties.html?city=Chennai">Chennai</a></li><li><a href="properties.html?city=Bangalore">Bangalore</a></li></ul></div>
+      <div class="footer-col"><h5>Platform</h5><ul><li><a href="/properties">Properties</a></li><li><a href="/flatmates">Find Flatmate</a></li><li><a href="/dashboard">Dashboard</a></li></ul></div>
+      <div class="footer-col"><h5>Account</h5><ul><li><a href="/auth">Login</a></li><li><a href="/auth">Register</a></li><li><a href="/profile">My Profile</a></li></ul></div>
+      <div class="footer-col"><h5>Cities</h5><ul><li><a href="/properties?city=Chennai">Chennai</a></li><li><a href="/properties?city=Bangalore">Bangalore</a></li></ul></div>
     </div>
     <div class="footer-bottom"><span>© 2025 RentMate. Built for DBMS Course Assignment.</span><a href="https://github.com/visvajithkesavan-crypto/rental-flatmate-finder" target="_blank">View on GitHub →</a></div>
   </div>
@@ -512,7 +512,7 @@
 
 <script>
   function switchTab(btn,type){document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('typeField').style.display=type==='flat'?'none':'';document.getElementById('locInput').placeholder=type==='flat'?'Preferred city or area...':'Chennai, Adyar, Koramangala...'}
-  function doSearch(){const q=document.getElementById('locInput').value.trim(),b=document.getElementById('budgetSel').value,p=new URLSearchParams();if(q)p.set('city',q);if(b)p.set('budget',b);window.location.href=`properties.html?${p.toString()}`}
+  function doSearch(){const q=document.getElementById('locInput').value.trim(),b=document.getElementById('budgetSel').value,p=new URLSearchParams();if(q)p.set('city',q);if(b)p.set('budget',b);window.location.href=`/properties?${p.toString()}`}
   document.getElementById('locInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
   function filterProps(btn,type){document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.prop-card').forEach(c=>{c.style.display=(type==='all'||c.dataset.type===type)?'block':'none'})}
   const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='translateY(0)'}})},{threshold:.1});

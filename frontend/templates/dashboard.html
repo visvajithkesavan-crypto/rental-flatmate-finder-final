@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -50,7 +50,7 @@
     .logout-btn:hover{color:white}
 
     /* MAIN CONTENT */
-    .main{margin-left:var(--sidebar);padding:2rem 2.5rem;min-height:100vh}
+    .main{margin-left:var(--sidebar);padding:2rem 2.5rem;min-height:100vh;min-width:0;overflow-x:hidden;width:calc(100vw - var(--sidebar))}
 
     /* TOP BAR */
     .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
@@ -78,7 +78,7 @@
     .change-down{color:var(--red)}
 
     /* GRID LAYOUT */
-    .dashboard-grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start}
+    .dashboard-grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start;min-width:0}
 
     /* SECTION CARD */
     .section-card{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);margin-bottom:1.5rem}
@@ -105,7 +105,7 @@
     .pill-cancelled{background:var(--red-light);color:#991B1B}
 
     /* LEASE CARD */
-    .lease-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--radius-md);padding:1.25rem;color:white;margin-bottom:1rem;position:relative;overflow:hidden}
+    .lease-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--radius-md);padding:1.25rem;color:white;margin-bottom:1rem;position:relative;overflow:hidden;width:100%;box-sizing:border-box}
     .lease-card::before{content:'';position:absolute;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%;top:-80px;right:-60px}
     .lease-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
     .lease-property{font-weight:700;font-size:.95rem}
@@ -192,7 +192,7 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <a href="index.html" class="logo-wrap">
+    <a href="/" class="logo-wrap">
       <div class="logo-icon">🏠</div>
       <div class="logo-text">Rent<span>Mate</span></div>
     </a>
@@ -223,7 +223,7 @@
       <span class="nav-icon">🤝</span> My Matches
       <span class="nav-badge">2</span>
     </div>
-    <div class="nav-item" onclick="location.href='flatmates.html'">
+    <div class="nav-item" onclick="location.href='/flatmates'">
       <span class="nav-icon">🔍</span> Find Flatmates
     </div>
 
@@ -232,16 +232,16 @@
       <span class="nav-icon">🔔</span> Notifications
       <span class="nav-badge">4</span>
     </div>
-    <div class="nav-item" onclick="location.href='profile.html'">
+    <div class="nav-item" onclick="location.href='/profile'">
       <span class="nav-icon">👤</span> My Profile
     </div>
-    <div class="nav-item" onclick="location.href='properties.html'">
+    <div class="nav-item" onclick="location.href='/properties'">
       <span class="nav-icon">🏠</span> Browse Properties
     </div>
   </nav>
 
   <div class="sidebar-footer">
-    <div class="logout-btn" onclick="location.href='auth.html'">
+    <div class="logout-btn" onclick="location.href='/auth'">
       🚪 Logout
     </div>
   </div>
@@ -261,7 +261,7 @@
         <div class="notif-btn" onclick="showSection('notifications')">
           🔔 <div class="notif-dot"></div>
         </div>
-        <a href="properties.html" class="btn btn-green">+ Find Property</a>
+        <a href="/properties" class="btn btn-green">+ Find Property</a>
       </div>
     </div>
 
@@ -448,18 +448,18 @@
             <div class="completion-item ci-todo">○ Add profile photo</div>
             <div class="completion-item ci-todo">○ Write a bio</div>
           </div>
-          <button class="btn btn-navy" style="width:100%;margin-top:1rem;justify-content:center;" onclick="location.href='profile.html'">Complete Profile →</button>
+          <button class="btn btn-navy" style="width:100%;margin-top:1rem;justify-content:center;" type="button" onclick="window.location.href='/profile'">Complete Profile →</button>
         </div>
 
         <!-- Quick actions -->
         <div class="section-card">
           <div class="section-header"><div class="section-title">Quick Actions</div></div>
           <div class="quick-actions">
-            <div class="quick-action" onclick="location.href='properties.html'">
+            <div class="quick-action" onclick="location.href='/properties'">
               <div class="qa-icon" style="background:var(--navy-light);">🔍</div>
               <div><div class="qa-title">Find Property</div><div class="qa-sub">Browse listings</div></div>
             </div>
-            <div class="quick-action" onclick="location.href='flatmates.html'">
+            <div class="quick-action" onclick="location.href='/flatmates'">
               <div class="qa-icon" style="background:var(--green-light);">🤝</div>
               <div><div class="qa-title">Find Flatmate</div><div class="qa-sub">View matches</div></div>
             </div>
@@ -467,7 +467,7 @@
               <div class="qa-icon" style="background:var(--amber-light);">🔔</div>
               <div><div class="qa-title">Notifications</div><div class="qa-sub">4 unread</div></div>
             </div>
-            <div class="quick-action" onclick="location.href='profile.html'">
+            <div class="quick-action" onclick="location.href='/profile'">
               <div class="qa-icon" style="background:var(--red-light);">👤</div>
               <div><div class="qa-title">My Profile</div><div class="qa-sub">65% complete</div></div>
             </div>
@@ -516,7 +516,7 @@
         <p>All your property booking requests in one place.</p>
       </div>
       <div class="topbar-right">
-        <a href="properties.html" class="btn btn-green">+ New Booking</a>
+        <button class="btn btn-green" type="button" onclick="window.location.href='/properties'">+ New Booking</button>
       </div>
     </div>
     <div class="inner-tabs">
@@ -536,7 +536,7 @@
         </div>
         <div style="text-align:right">
           <div class="booking-price">₹18,000<div class="booking-price-unit">/month</div></div>
-          <button class="btn btn-outline" style="margin-top:.5rem;font-size:.72rem;padding:.3rem .7rem" onclick="showSection('leases')">View Lease</button>
+          <button class="btn btn-navy" style="margin-top:.5rem;font-size:.72rem;padding:.3rem .7rem;" type="button" onclick="showSection('leases')">View Lease →</button>
         </div>
       </div>
       <div class="booking-row">
@@ -594,8 +594,8 @@
       </div>
     </div>
     <div style="margin-top:1rem;display:flex;gap:.75rem">
-      <button class="btn btn-outline">📄 Download Lease PDF</button>
-      <button class="btn btn-outline">⭐ Leave a Review</button>
+      <button class="btn btn-outline" type="button" onclick="alert('PDF download coming in live version!')">📄 Download Lease PDF</button>
+      <button class="btn btn-outline" type="button" onclick="alert('Review feature coming in live version!')">⭐ Leave a Review</button>
     </div>
   </div>
 
@@ -607,7 +607,7 @@
         <p>Your compatibility matches powered by the matching engine.</p>
       </div>
       <div class="topbar-right">
-        <a href="flatmates.html" class="btn btn-green">Find More Matches</a>
+        <button class="btn btn-green" type="button" onclick="window.location.href='/flatmates'">Find More Matches</button>
       </div>
     </div>
     <div class="section-card">
@@ -620,7 +620,7 @@
         <div class="match-info">
           <div class="match-name">Sneha Iyer · ⭐ 4.0</div>
           <div class="match-sub">Early bird · Veg · Chennai · Budget: ₹6,000–₹10,000</div>
-          <div class="match-actions"><button class="mini-btn mini-btn-green" onclick="alert('Match accepted!')">Accept ✅</button><button class="mini-btn mini-btn-outline" onclick="location.href='flatmates.html'">View Profile</button></div>
+          <div class="match-actions"><button class="mini-btn mini-btn-green" onclick="alert('Match accepted!')">Accept ✅</button><button class="mini-btn mini-btn-outline" onclick="location.href='/flatmates'">View Profile</button></div>
         </div>
         <div class="match-score-wrap">
           <div class="match-score">88</div>
@@ -632,7 +632,7 @@
         <div class="match-info">
           <div class="match-name">Meera Pillai · ⭐ 4.3</div>
           <div class="match-sub">Night owl · Veg · Chennai · Budget: ₹9,000–₹16,000</div>
-          <div class="match-actions"><button class="mini-btn mini-btn-green" onclick="alert('Match accepted!')">Accept ✅</button><button class="mini-btn mini-btn-outline" onclick="location.href='flatmates.html'">View Profile</button></div>
+          <div class="match-actions"><button class="mini-btn mini-btn-green" onclick="alert('Match accepted!')">Accept ✅</button><button class="mini-btn mini-btn-outline" onclick="location.href='/flatmates'">View Profile</button></div>
         </div>
         <div class="match-score-wrap">
           <div class="match-score">72</div>
@@ -718,35 +718,53 @@
 </main>
 
 <script>
-  // Section switcher
-  function showSection(name) {
-    document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
-    document.getElementById(`section-${name}`).style.display = '';
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    const map = { overview:0, bookings:1, leases:2, matches:3, notifications:5 };
-    const items = document.querySelectorAll('.nav-item');
-    if (map[name] !== undefined) items[map[name]].classList.add('active');
-  }
-
-  // Mark all notifications as read
-  function markAllRead() {
-    document.querySelectorAll('.notif-item.unread').forEach(n => n.classList.remove('unread'));
-    document.querySelectorAll('.unread-dot').forEach(d => d.style.display = 'none');
-    document.querySelector('.notif-dot').style.display = 'none';
-    document.querySelectorAll('.nav-badge').forEach(b => b.style.display = 'none');
-  }
-
-  // Accept/decline match buttons
-  document.querySelectorAll('.mini-btn-green').forEach(btn => {
-    btn.addEventListener('click', function() {
-      if (this.textContent.includes('Accept')) {
-        this.textContent = '✅ Accepted';
-        this.style.background = 'var(--green)';
-        this.style.color = 'white';
-        // In real app: POST /flatmates/accept → UPDATE FLATMATE_MATCH SET status='accepted'
-      }
-    });
+function showSection(name) {
+  document.querySelectorAll('[id^="section-"]').forEach(function(s) {
+    s.style.display = 'none';
   });
+  var target = document.getElementById('section-' + name);
+  if (target) {
+    target.style.display = 'block';
+  }
+  document.querySelectorAll('.nav-item').forEach(function(n) {
+    n.classList.remove('active');
+  });
+  var map = { overview:0, bookings:1, leases:2, matches:3, notifications:5 };
+  var items = document.querySelectorAll('.nav-item');
+  if (map[name] !== undefined && items[map[name]]) {
+    items[map[name]].classList.add('active');
+  }
+}
+
+function markAllRead() {
+  document.querySelectorAll('.notif-item.unread').forEach(function(n) {
+    n.classList.remove('unread');
+  });
+  document.querySelectorAll('.unread-dot').forEach(function(d) {
+    d.style.display = 'none';
+  });
+  var dot = document.querySelector('.notif-dot');
+  if (dot) dot.style.display = 'none';
+  document.querySelectorAll('.nav-badge').forEach(function(b) {
+    b.style.display = 'none';
+  });
+  alert('All notifications marked as read!');
+}
+
+document.querySelectorAll('.mini-btn-green').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    if (this.textContent.trim() === 'Accept' || this.textContent.includes('Accept')) {
+      this.textContent = 'Accepted ✅';
+      this.style.background = 'var(--green)';
+      this.style.color = 'white';
+      this.style.borderColor = 'var(--green)';
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  showSection('overview');
+});
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -150,19 +150,19 @@
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
+    <a href="/" class="nav-logo">
       <div class="nav-logo-icon">🏠</div>
       <div class="nav-logo-text">Rent<span>Mate</span></div>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="properties.html">Properties</a></li>
-      <li><a href="flatmates.html">Find Flatmate</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/properties">Properties</a></li>
+      <li><a href="/flatmates">Find Flatmate</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="dashboard.html" class="btn btn-ghost">← Dashboard</a>
-      <a href="auth.html" class="btn btn-green">Logout</a>
+      <a href="/dashboard" class="btn btn-ghost">← Dashboard</a>
+      <a href="/auth" class="btn btn-green">Logout</a>
     </div>
   </div>
 </nav>
@@ -399,9 +399,9 @@
     <div class="stats-card">
       <h4>Quick Links</h4>
       <div style="display:flex;flex-direction:column;gap:.5rem">
-        <a href="dashboard.html" class="btn btn-outline" style="justify-content:center">📊 My Dashboard</a>
-        <a href="properties.html" class="btn btn-outline" style="justify-content:center">🏠 Browse Properties</a>
-        <a href="flatmates.html" class="btn btn-outline" style="justify-content:center">🤝 Find Flatmates</a>
+        <a href="/dashboard" class="btn btn-outline" style="justify-content:center">📊 My Dashboard</a>
+        <a href="/properties" class="btn btn-outline" style="justify-content:center">🏠 Browse Properties</a>
+        <a href="/flatmates" class="btn btn-outline" style="justify-content:center">🤝 Find Flatmates</a>
       </div>
     </div>
 
@@ -482,7 +482,7 @@
       // In real app: DELETE /api/users/<id> → DELETE FROM USER WHERE user_id = ?
       // Cascade deletes will remove bookings, leases, matches, notifications
       alert('Account deleted. Redirecting to home page.');
-      window.location.href = 'index.html';
+      window.location.href = '/';
     }
   }
 </script>

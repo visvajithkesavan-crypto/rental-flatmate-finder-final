@@ -4,21 +4,27 @@
 #  Change YOUR_PASSWORD_HERE to your MySQL root password
 # ============================================================
 
+import os
 import mysql.connector
 from mysql.connector import Error
 
 def get_db_connection():
-    """
-    Returns a new MySQL connection.
-    Called at the start of every route that needs DB access.
-    """
     try:
+        # Print env vars for debugging
+        host = os.environ.get('MYSQL_HOST', 'localhost')
+        port = int(os.environ.get('MYSQL_PORT', 3306))
+        user = os.environ.get('MYSQL_USER', 'root')
+        password = os.environ.get('MYSQL_PASSWORD', 'YOUR_LOCAL_PASSWORD')
+        database = os.environ.get('MYSQL_DATABASE', 'railway')
+
+        print(f"[DB] Connecting to {host}:{port} as {user} to {database}")
+
         connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            user='root',
-            password='visva',  # ← change this
-            database='rental_flatmate_db'
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database
         )
         return connection
     except Error as e:
